@@ -1,0 +1,147 @@
+<!DOCTYPE html>  
+<html lang="en">  
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tablecloth.js demo</title>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/prettify.css" rel="stylesheet">
+    <link href="css/tablecloth.css" rel="stylesheet">
+    <style type="text/css">
+      @media print{@page {size: landscape}}
+
+      .logo {
+        height: 50px;
+      }
+
+    </style>
+  </head>
+  
+  <body dir ="rtl">
+    <div class="container">
+      <h3 class="muted pull-left"><img id="ownerLogo" src="img/logo.jpg" class="logo"> Almanteq</h3>
+       <div class="row">
+        <div class="span12">
+          <div id="offer-target">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span12" >
+          <div id="systems-target">
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script id="offer-template" class="tmpl" type="text/x-handlebars-template">
+
+    <table  cellspacing="1" cellpadding="3" class="tablehead " style="background:#CCC;">
+      <thead>
+            <tr class="colhead ">
+              <th colspan="6">بيانات العرض</th>
+            </tr>
+          </thead>
+      <tbody>
+        <tr>
+          <th>Offer#</th><td>{{offer.offern}}</td>
+          <th>رقم الشحنة</th><td>{{offer.packagen}}</td>
+          <th>مصاريف اخرى</th><td>{{offer.otherex}}</td>
+        </tr>
+        <tr>
+          <th>ٍSap#</th><td>{{offer.sapordern}}</td>
+          <th>تاريخ الشحنة</th><td>{{formatTime offer.pdate}}</td>
+          <th>ٍاجمالي المصاريف</th><td><div class="text-error">{{offer.overallex}}</div></td>
+        </tr>
+        <tr>
+          <th>Order#</th><td>{{offer.ordern}}</td>
+          <th>مصدر الشحنة</th><td>{{offer.source}}</td>
+          <th>اجمالي التكلفة بال{{formatCurrency offer.currency}}</th><td><div class="text-error">{{offer.paidinf}}</div></td>
+        </tr>
+        <tr>
+          <th>سعر الصرف</th><td>{{offer.rate}}</td>
+          <th>وصف الشحنة</th><td>{{offer.desc }}</td>
+          <th>اجمالي التكلفة ب د.ل</th><td><div class="text-error">{{offer.paidinlyd }}</div></td>
+        </tr>
+        <tr>
+          <th>تاريخ</th><td>{{formatTime offer.date}}</td>
+          <th>مصاريف الجمارك</th><td>{{offer.customex}}</td>
+          <th>اجمالي بعد التكاليف</th><td><div class="text-error">{{offer.overall}}</div></td>
+        </tr>
+        <tr>
+          <th>Product version</th><td>{{offer.producv}}</td>
+          <th>ٍمصاريف الشحن</th><td>{{offer.shipex}}</td>
+          <th>ربح الفردي</th><td>%{{offer.retail}}</td>
+        </tr>
+        <tr>
+          <th>العملة المستعملة</th><td>{{formatCurrency offer.currency}}</td>
+          <th>ٍمصاريف الضرائب</th><td>{{offer.taxex}}</td>
+          <th>ٍربح القطاعي</th><td>%{{offer.wholesale}}</td>
+        </tr>
+        <tr>
+          <th colspan=1>ٍملاحظات</th><td colspan=16>{{offer.note}}</td>
+        </tr>
+      </tbody>
+    </table>
+   </script>
+  <script id="systems-template" class="tmpl" type="text/x-handlebars-template">
+      <table  cellspacing="1" cellpadding="3" class="tablehead " style="background:#CCC;">
+        <thead>
+          <tr>
+            <th>الصنف</th>
+            <th>الكمية</th>
+            <th>سعر الوحدة$</th>
+            <th>الإجمالي $</th>
+            <th>سعر الوحدة د.ل</th>
+            <th>الإجمالي د.ل</th>
+            <th>قيمة التكلفة</th>
+            <th>السعر بعد التكلفة</th>
+            <th>الاجمالي بعد التكلفة</th>
+            <th><div class="text-error">سعر البيع القطاعي</div></th>
+            <th>نسبة الأرباح</th>
+            <th><div class="text-info">اسعار الجملة</div></th>
+            <th>نسبة الربح</th>
+            <th>قيمة الربح</th>
+            <th>إجمالي الربح</th>
+            <th>مجموع الكلي للقطاعي</th>
+            <th>مجموع الكلي للجملة</th>
+          </tr>
+        </thead>
+        <tbody>
+        {{#each systems}}
+          <tr id="s{{this.iditem}}">
+            <td>{{this.class}}</td>
+            <td>{{this.quantity}}</td>
+            <td>{{this.itemprice}}</td>
+            <td>{{this.totalprice}}</td>
+            <td>{{priceInLYD this.itemprice}}</td>
+            <td>{{priceInLYD this.totalprice}}</td>
+            <td>{{itemCost this.itemprice}}</td>
+            <td>{{priceAfterCost this.itemprice}}</td>
+            <td>{{totalAfterCost this.itemprice this.quantity}}</td>
+            <td><div class="text-error">{{retailPrice this.itemprice}}</div></td>
+            <td>{{retailPerc}}</td>
+            <td><div class="text-info">{{wholesalePrice this.itemprice}}</div></td>
+            <td>{{wholesalePerc}}</td>
+            <td>{{itemProphet this.itemprice}}</td>
+            <td>{{totalProphet this.itemprice this.quantity}}</td>
+            <td>{{totalItem this.itemprice this.quantity}}</td>
+            <td>{{totalWholesale this.itemprice this.quantity}}</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </script>
+
+  <script src="js/jquery-1.10.1.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/purl.js"></script>
+  <script src="js/prettify.js"></script>
+  <script src="js/handlebars-1.0.rc.1.js"></script>
+  <script src="js/jquery.tablecloth.js"></script>
+  <script src="js/jquery.tablesorter.min.js"></script>
+  <script src="js/offerview.js"></script>
+ 
+
+</html>

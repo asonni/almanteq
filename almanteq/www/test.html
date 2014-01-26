@@ -1,0 +1,153 @@
+  <div id="activateModal" class="modal hide fade span10 modalA" tabindex="-1" data-keyboard="true" role="dialog" aria-labelledby="newMsgLabel" aria-hidden="true">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="newMsgLabel" >Activate / اعتماد</h3>
+          </div>
+          <div class="modal-body">
+            <form class="well span9" id="activate" data-async data-target="#activateModal" >
+              <div class="row">
+                <div class="span3">
+                  <label>رقم الشحنة</label>
+                  <input type="text" name="packagen" class="span3" placeholder="Package#"   value="">
+                  <label>تاريخ الشحنة</label>
+                  <div class="input-append date input-rtl" id="dp3" data-date="" data-date-format="yyyy-mm-dd">
+                    <input class="span2.75" id="oDate" size="16" type="text" name="pdate" value="2013-06-16" readonly>
+                    <span class="add-on"><i class="icon-calendar"></i></span>
+                  </div>
+                  <label>مصدر الشحنة</label>
+                  <input type="text" class="span3" placeholder="Source" name="source" value="" data-provide="typeahead" data-items="4" data-source='["مصر","تونس","ليبيا","المانيا","المغرب","أمريكا","بريطانيا","اليابان"]'>
+                  <label>وصف الشحنة</label>
+                  <input type="text" class="span3" placeholder="Description" name="desc" value="">
+                  <label>سعر الصرف</label>
+                </div>
+                <div class="span3">
+                  <label>مصاريف الجمارك</label>
+                  <input type="text" class="span3" placeholder="Custom expences" id="acustomex" name="customex" value="0">
+                  <label>مصاريف الشحن</label>
+                  <input type="text"  class="span3" placeholder="Shipping expences" id="ashipex" name="shipex" value="0">
+                  <label>مصاريف الضرائب</label>
+                  <input type="text" class="span3" placeholder="Tax expences" id="ataxex" name="taxex" value="0">
+                  <label>مصاريف اخرى</label>
+                  <input type="text" class="span3" placeholder="Other expences" id="aotherex" name="otherex" value="0">
+                  <label>اجمالي المصاريف</label>
+                  <input type="text" class="span3" placeholder="Overall expences" id="aoverallex" name="overallex" value="" readonly>
+                </div>
+                <div class="span3">
+                  <label>المدفوع بالعملة الصعبة</label>
+                  <input type="text" class="span3" placeholder="Paid in foreign money" id="apaidinf" name="paidinf" value="" readonly>
+                  <label>المدفوع بالدينار الليبي</label>
+                  <input type="text" class="span3" placeholder="Paid in LYD" id="apaidinlyd" name="paidinlyd" value="" readonly>
+                  <label>الإجمالي</label>
+                  <input type="text" class="span3" placeholder="Overlall" id="aoverall" name="overall" value="" readonly>
+                  <div id="prophit-target">
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel / إلغاء</button>
+            <button type="submit" value= "submit" class="btn btn-primary confirmActivate">Add / إضافة</button>
+          </div>
+        </div>
+
+
+           <script id="prophit-template" class="tmpl" type="text/x-handlebars-template">
+      <label>Retail % / نسبة الأرباح للقطاعي</label>
+      <select class="span3" name = "retail">
+      <option value = "10" selected> % 10</option>
+        {{#each percentage}}
+          <option value = "{{this.value}}"> % {{this.value}}</option>
+        {{/each}}
+      </select>
+      <label>Whole Sale % / نسبة الأرباح للجملة</label>
+      <select class="span3" name = "wholesale">
+      <option value = "7" selected> % 7</option>
+        {{#each percentage}}
+          <option value = "{{this.value}}"> % {{this.value}}</option>
+        {{/each}}
+      </select>
+    </script>
+
+
+  function getPercent(){
+    var percentage = [];
+      for (var i = 1; i <= 100 ; i++){
+        percentage.push({value : i});
+      }
+      return percentage;
+  }
+
+ /*
+  $('#rate, #paidinf').on('change',function(e){
+    console.log("got changed");
+      var rate = $("#rate").val() != "" ? parseFloat($("#rate").val()) : 1,  //  Get rate value
+          paidinf = $("#paidinf").val() != "" ? parseFloat($("#paidinf").val()) : 0,
+          overallex = $("#overallex").val() != "" ? parseFloat($("#overallex").val()) : 0,
+          paidinlyd = rate*paidinf;  //  Get rate value
+      $('#paidinlyd').val(Math.round(paidinlyd,3)); // Paid in LYD
+      $('#overall').val(Math.round(paidinlyd+overallex,3));
+  });
+  $('#acustomex, #ashipex, #ataxex, #aotherex').on('change',function(e){
+      var customex = $("#acustomex").val() != "" ? parseFloat($("#acustomex").val()) : 0,
+          shipex = $("#ashipex").val() != "" ? parseFloat($("#ashipex").val()) : 0,
+          taxex = $("#ataxex").val() != "" ? parseFloat($("#ataxex").val()) : 0,  
+          otherex = $("#aotherex").val() != "" ? parseFloat($("#aotherex").val()) : 0,
+          paidinlyd = $("#apaidinlyd").val() != "" ? parseFloat($("#apaidinlyd").val()) : 0,
+          overallex = customex+shipex+taxex+otherex;
+      $('#aoverallex').val(Math.round(overallex,3));
+      $('#aoverall').val(Math.round(paidinlyd+overallex,3)); 
+  });*/
+/*
+  $('body').on("click", ".confirmActivate", function(){
+    console.log("confirmActivate");
+    $("#activate").submit();
+  });
+
+  $('body').on('submit', '#activate', function(data) {
+    
+    obj = $("#activate").serializeObject();
+    obj["idoffer"]= $.tp.id;
+    console.log(obj);*/
+    /*$.post("/activate", obj, function(data, textStatus, jqXHR){
+      $('#activateModal').modal('hide');
+      
+    });
+    return false;
+  });*/
+
+    $("#activateModal form").validate({
+    rules: {
+      packagen: {
+        required:true,
+      },
+      source: {
+        required:true,
+      },
+      desc: {
+        required:true,
+      },
+      rate: {
+        required:true,
+        customnumeric : true
+      },
+      customex: {
+        customnumeric:true,
+      },
+      shipex: {
+        customnumeric:true,
+      },
+      taxex: {
+        customnumeric:true,
+      },
+      otherex: {
+        customnumeric:true,
+      },
+    },
+    messages: {
+      packagen: {
+        required :"يرجى ادخال رقم الشحنة"
+      }
+      
+    }
+  });

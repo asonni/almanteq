@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Almanteq</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet">  
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/datepicker.css" rel="stylesheet">  
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="masthead">
+        <div class="row">
+          <div class="span6">
+            <br>
+            <ul class="nav nav-pills">
+              <li><a href="#">Home</a></li>
+              <li class="active"><a href="/offers">المشتريات</a></li>
+              <li><a href="/users">المستخدمين</a></li>
+              <li><a href="#">Downloads</a></li>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Contact</a></li>
+            </ul>
+          </div>
+          <div class="span3">
+            <h3 class="muted pull-right"><img id="ownerLogo" src="img/logo.jpg" class="logo"> Almanteq</h3>
+          </div>
+        </div>
+        <div class="well" id="offers-target">
+        </div>
+
+        <div id="myModal" class="modal hide fade span9 modalA" tabindex="-1" data-keyboard="true" role="dialog" aria-labelledby="newMsgLabel" aria-hidden="true">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="newMsgLabel" >New Offer / عرض جديد</h3>
+          </div>
+          <div class="modal-body">
+            <form class="well span8" id="addOffer">
+              <div class="row">
+                <div class="span3">
+                  <label>Offer Number</label>
+                  <input type="text" class="span3" placeholder="Offer number" name="offern" value="">
+                  <label>SAP order number</label>
+                  <input type="text" class="span3" placeholder="SAP order number" name="sapordern" value="">
+                  <label>Order number</label>
+                  <input type="text" class="span3" placeholder="Order number" name="ordern" value="">
+                  <label>Currency / العملة</label>
+                  <select class="span3" name = "currency">
+                    <option value = "USD">دولار</option>
+                    <option value = "EUR">يورو</option>
+                    <option value = "LYD">دينار ليبي</option>
+                    <option value = "GBP">باوند</option>
+                  </select>
+                  <label>Date/التاريخ</label>
+                  <div class="input-append date" id="dp3" data-date="" data-date-format="yyyy-mm-dd">
+                    <input class="span2.75" id="oDate" size="16" type="text" name="date" value="2013-06-16" readonly>
+                    <span class="add-on"><i class="icon-calendar"></i></span>
+                  </div>
+                  <div id="valid-target">
+                  </div>
+                  <label>Product Version</label>
+                  <input type="text" class="span3" placeholder="Product Version" name="producv" value="">
+                </div>
+                <div class="span5">
+                  <br>
+                  <label>Notes / ملاحظات</label>
+                  <textarea name="note" id="note" class="input-xlarge span5" rows="10"></textarea>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel / إلغاء</button>
+            <button type="submit" value= "submit" class="btn btn-primary confirmAddMsg">Add / إضافة</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script id="offers-template" class="tmpl" type="text/x-handlebars-template">
+      <legend>Offers / العروض&nbsp;&nbsp;&nbsp;&nbsp; <a href="#myModal" role="button" class="btn btn-success btn-small" data-toggle="modal"><i class="icon-plus icon-white"></i> add new / عرض جديد</a></legend>
+      <table id = "scroll" class="table table-striped"   >
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Offer #</th>
+            <th>SAP order #</th>
+            <th>Order #</th>
+            <th>العملة</th>
+            <th>Date / التاريخ</th>
+            <th>Product Version</th>
+            <th>اظهار</th>
+            <th>إزالة</th>
+          </tr>
+        </thead>
+        <tbody>
+        {{#each offers}}
+          <tr>
+            <td><span class="label label-{{checkStatus this.validity this.date this.status}}"><i class="icon-flag"></i></span></td>
+            <td>{{this.offern}}</td>
+            <td>{{this.sapordern}}</td>
+            <td>{{this.ordern}}</td>
+            <td>{{formatCurrency this.currency}}</td>
+            <td>{{formatTime this.date}}</td>
+            <td>{{this.producv}}</td>
+            <td><a class="btn btn-mini" href="offer.html?id={{this.idoffer}}"><i class="icon-search"></i></a></td>
+            <td><a class="btn btn-mini btn-danger" href="#"><i class="icon-remove"></i></a></td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </script>
+    <script id="newOffers-template" class="tmpl" type="text/x-handlebars-template">
+      {{#each offers}}
+      <tr>
+          <td><span class="label label-{{checkStatus this.validity this.date this.status}}"><i class="icon-flag"></i></span></td>
+          <td>{{this.offern}}</td>
+          <td>{{this.sapordern}}</td>
+          <td>{{this.ordern}}</td>
+          <td>{{formatCurrency this.currency}}</td>
+          <td>{{formatTime this.date}}</td>
+          <td>{{this.producv}}</td>
+          <td><a class="btn btn-mini" href="offer.html?id={{this.idoffer}}"><i class="icon-search"></i></a></td>
+          <td><a class="btn btn-mini btn-danger" href="#"><i class="icon-remove"></i></a></td>
+        </tr>
+      {{/each}}
+    </script>
+    <script id="valid-template" class="tmpl" type="text/x-handlebars-template">
+      <label>Validity / الصلاحية بالشهور</label>
+      <select class="span3" name = "validity">
+        {{#each months}}
+          <option value = "{{this.value}}">{{this.value}}</option>
+        {{/each}}
+      </select>
+    </script>
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/prettify.js"></script>
+    <script src="js/bootstrap-datepicker.js"></script>
+    <script src="js/purl.js"></script>
+    <script src="js/handlebars-1.0.rc.1.js"></script>
+    <script src="js/helpers.js"></script>
+    <script src="js/offers.js"></script>
+
+  </body>
+</html>

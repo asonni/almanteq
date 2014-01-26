@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Almanteq</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Le styles -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">  
+    <link href="/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="masthead">
+        
+        <div class="row">
+          <div class="span6">
+            <br>
+            <ul class="nav nav-pills">
+              <li><a href="/offers">المشتريات</a></li>
+              <li><a href="/sales">المبيعات</a></li>
+              <li><a href="/users">المستخدمين</a></li>
+              <li class="active"><a href="/customers">الزبائن</a></li>
+              <li><a href="/stock">المخزن</a></li>
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" ref="#"> <div id="user-target"></div></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/user">حسابي</a></li>
+                  <li><a href="/logout">خروج</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="row-fluid">
+            <h3 class="muted pull-right"><img id="ownerLogo" src="/img/logo.jpg" class="logo"> Almanteq</h3>
+          </div>
+        </div>
+        
+        <div id="customers-target">
+        </div>
+
+        <div id="myModal" class="modal hide fade span9 modalA" tabindex="-1" data-keyboard="true" role="dialog" aria-labelledby="newMsgLabel" aria-hidden="true">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="newMsgLabel" >New Customer / زبون جديد</h3>
+          </div>
+          <div class="modal-body">
+            <form class="well span8" id="addCustomer">
+              <div class="row">
+                <div class="span3">
+                  <label>الإسم</label>
+                  <input type="text" class="span3" placeholder="الإسم" name="name" value="">
+                  <label>النوع</label>
+                  <select class="span3" name = "type">
+                    <option value = "customer">زبون</option>
+                    <option value = "company">شركة/مؤسسة حكومية</option>
+                  </select>
+                  <label>اسم المندوب</label>
+                  <input type="text" class="span3" placeholder="إسم المندوب" name="rep" value="">
+                  <label>البريد الإلكتروني</label>
+                  <input type="text" class="span3" placeholder="البريد الإلكتروني" name="email" value="">
+                  <label>رقم الهاتف</label>
+                  <input type="text" class="span3" placeholder="رقم الهاتف" name="phone" value="">
+                  <label>دائن</label>
+                  <input type="text" class="span3" placeholder="دائن بملغ وقدره" name="creditor" value="">
+                  <label>مدين</label>
+                  <input type="text" class="span3" placeholder="مدين بملغ وقدره" name="debtor" value="">
+                </div>
+                <div class="span5">
+                  <br>
+                  <label>Notes / ملاحظات</label>
+                  <textarea name="note" id="note" class="input-xlarge span5" rows="10"></textarea>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel / إلغاء</button>
+            <button type="submit" value= "submit" class="btn btn-primary confirmAddMsg">Add / إضافة</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script id="user-template" class="tmpl" type="text/x-handlebars-template">
+      {{name}}<b class="caret"></b>    
+    </script>
+    <script id="customers-template" class="tmpl" type="text/x-handlebars-template">
+      <legend>Customers / الزبائن&nbsp;&nbsp;&nbsp;&nbsp; <a href="#myModal" role="button" class="btn btn-success btn-small" data-toggle="modal"><i class="icon-plus icon-white"></i> add new / زبون جديد</a>
+        <ul class="pager pull-right">
+          <li id="prevli"><a href="#" id="prev">السابق</a></li>
+          <li id="nextli"><a href="#" id="next">التالي</a></li>
+        </ul>
+      </legend>
+      <table id = "scroll" class="table table-striped"   >
+        <thead>
+          <tr>
+            <th>الإسم</th>
+            <th>النوع</th>
+            <th>المندوب</th>
+            <th>البريد الإلكتروني</th>
+            <th>رقم الهاتف</th>
+            <th>دائن</th>
+            <th>مدين</th>
+            <th>اظهار</th>
+            <th>إلغاء</th>
+          </tr>
+        </thead>
+        <tbody>
+        {{#each customers}}
+          <tr>
+            <td>{{this.name}}</td>
+            <td>{{customerType this.type}}</td>
+            <td>{{this.rep}}</td>
+            <td>{{this.email}}</td>
+            <td>{{this.phone}}</td>
+            <td>{{this.creditor}}</td>
+            <td>{{this.debtor}}</td>
+            <td><a class="btn btn-mini" href="customer.html?id={{this.idcustomer}}"><i class="icon-search"></i></a></td>
+            <td><a class="btn btn-mini btn-danger" href="#"><i class="icon-remove"></i></a></td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </script>
+    <script id="newCustomer-template" class="tmpl" type="text/x-handlebars-template">
+        <tr>
+          <td>{{customer.name}}</td>
+          <td>{{customerType customer.type}}</td>
+          <td>{{customer.rep}}</td>
+          <td>{{customer.email}}</td>
+          <td>{{customer.phone}}</td>
+          <td>{{customer.creditor}}</td>
+          <td>{{customer.debtor}}</td>
+          <td><a class="btn btn-mini" href="customer.html?id={{customer.idcustomer}}"><i class="icon-search"></i></a></td>
+          <td><a class="btn btn-mini btn-danger" href="#"><i class="icon-remove"></i></a></td>
+        </tr>
+    </script>
+    <script src="/js/jquery-1.10.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/prettify.js"></script>
+    <script src="/js/bootstrap-datepicker.js"></script>
+    <script src="/js/purl.js"></script>
+    <script src="/js/handlebars-1.0.rc.1.js"></script>
+    <script src="/js/helpers.js"></script>
+    <script src="/js/customers.js"></script>
+  </body>
+</html>

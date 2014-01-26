@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Almanteq</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+   
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet">  
+    <style type="text/css">
+    .input-prepend .add-on:first-child, .input-prepend .btn:first-child {
+
+      border-radius: 0 4px 4px 0;
+    }
+
+    .input-append input, .input-prepend input, .input-append select, .input-prepend select, .input-append .uneditable-input, .input-prepend .uneditable-input {
+      position: relative;
+      margin-bottom: 0;
+      vertical-align: top;
+      -webkit-border-radius: 0 4px 4px 0;
+      -moz-border-radius: 0 4px 4px 0;
+      border-radius: 4px 0 0 4px;
+    }
+    </style>
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <h3 class="muted"><img id="ownerLogo" src="img/logo.jpg" class="logo"> Almanteq</h3>
+      <div class='notifications top-right'>
+      </div>
+      <div id="retPassModal" class="modal hide fade span9 modalA" tabindex="-1" data-keyboard="true" role="dialog" aria-labelledby="newMsgLabel" aria-hidden="true">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="newMsgLabel" >إستعادة كلمة المرور</h3>
+          </div>
+          <div class="modal-body">
+            <p>الرجاء إدخال بريدك الإلكتروني لإستعادة كلمة المرور</p>
+            <form class="well span8" id="retpass">
+              <label>Email</label>
+                  <input type="text" class="span3" placeholder="Email" name="email" value="">
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel / إلغاء</button>
+            <button type="submit" value= "submit" class="btn btn-primary confirmRetPass">إسترجاع</button>
+          </div>
+      </div>
+      <div dir="rtl">
+        <form class="form form-signin" id="signin" method="POST" action "/login">
+          <legend>دخول المستخدمين</legend>
+          <div class="input-prepend ">
+            <span class="add-on appended"><i class="icon-envelope"></i></span>
+            <input type="text" dir="ltr" id="username" name="username" class="input-block-level " placeholder="Email address">
+          </div>
+          <div class="input-prepend ">
+          <span class="add-on"><i class="icon-lock"></i></span>
+            <input type="password" dir="ltr" id="password" name="password" class="input-block-level " placeholder="Password">
+          </div>
+          </br>
+          <button class="button btn btn-warning ">دخول</button>
+          <div class="alert alert-info">
+            <p>لم تقم بالتسجيل بعد,  الرجاء <b><a href="/signup">التسجيل</a></b></p>
+          </div>
+          <div class="alert">
+            <p>نسيت كلمة المرور الرجاء الضغط على <b><a href="#retPassModal" data-toggle="modal">الرابط</a></b></p>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/js/jquery-1.10.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/prettify.js"></script>
+    <script src="/js/purl.js"></script>
+    <script src ="js/jquery.validate.js"></script>
+    <script src="js/signin.js"></script>
+    <script src="js/bootstrap-notify.js"></script>
+  </body>
+</html>
