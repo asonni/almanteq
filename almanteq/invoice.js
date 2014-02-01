@@ -138,6 +138,23 @@ exports.invoiceMgr = {
       });
     });
   },
+  getUserRep : function(cb) {
+    mysqlMgr.connect(function (conn){
+      conn.query('SELECT  `user_iduser` as `id`, DAY(`timestamp`) as `day`, COUNT(`user_iduser`) as `count`'+
+                 'FROM  `invoice`'+
+                 'WHERE MONTH(CURRENT_DATE()) = MONTH(`timestamp`) '+ 
+                 'GROUP BY DAY(`timestamp`) ,`user_iduser`; SELECT DISTINCT '+
+                 '(`user_iduser`) AS valueField ,`user`.`name` FROM  `invoice` ,  `user` '+
+                  'WHERE MONTH(CURRENT_DATE())= MONTH(`timestamp`) AND  '+
+                  '`user`.`iduser` =  `invoice`.`user_iduser` ',function(err,result) {
+        if(err) {
+        util.log("mysql lib err "+err);
+        } else {
+          cb(result);
+        }
+      });
+    });
+  },
 
   /*SELECT Orders.OrderID, Customers.CustomerName, Orders.OrderDate
 FROM Orders

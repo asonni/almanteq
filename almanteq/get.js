@@ -110,6 +110,9 @@ exports.getMgr = {
       case "cancelInvoice" :
         this.handleCancelInvoice(req.params,res,cb);
         break;
+      case "getUserRep" :
+        this.handlegetUserRep(req.params,res,cb);
+        break;
 	    default:
 		  /*defaultMgr.handleDefault(req, res);*/
 	  }	
@@ -301,6 +304,11 @@ exports.getMgr = {
   handleCancelInvoice : function (req,res,cb){
     invoiceMgr.cancelInvoice(req.id,function (result){
       cb(true);
+    });
+  },
+  handlegetUserRep : function (req,res,cb){
+    invoiceMgr.getUserRep(function (result){
+      cb(result);
     });
   },
 

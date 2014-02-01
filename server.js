@@ -166,6 +166,9 @@ app.get('/users',ensureAuthenticated, function(req, res){
     res.render('offers');
   }
 });
+app.get('/reports',ensureAuthenticated, function(req, res){
+  res.render('reports');
+});
 app.get('/getUserType',ensureAuthenticated, function(req, res){
   if(getUserType(req.sessionID)!="user") {
       res.send(true);

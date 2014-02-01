@@ -1,4 +1,4 @@
-html, body
+/*html, body
 {
     margin: 0px;
     padding: 0px;
@@ -11,15 +11,15 @@ html, body
 body
 {
     background-color: #efefef;
-}
+}*/
 
-h1, h2, h3, h4, h5, h6
+/*h1, h2, h3, h4, h5, h6
 {
     font-family:'Segoe UI Light', 'Helvetica Neue Light', 'Segoe UI', 'Helvetica Neue', Helvetica, 'Trebuchet MS', 'Droid Sans', Tahoma, Geneva, sans-serif;
     font-weight: 200;
     font-size: 18px;
     margin: 0px;
-}
+}*/
 
 .header
 {
