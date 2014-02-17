@@ -78,6 +78,21 @@ $(document).ready(function(){
 					return "غير معروف";
 			}
 		},
+		"formatPayment" : function(payment){
+			switch (payment){
+				case "CASH" :
+					return "نقدا";
+					break;
+				case "ACCOUNT" :
+					return "على الحساب";
+					break;
+				case "HALF" :
+					return "دفع جزء وباقي جزء";
+					break;
+				default : 
+					return "غير معروف";
+			}
+		},
 		"customerType" : function(type){
 			switch (type){
 				case "CUSTOMER" :

@@ -114,6 +114,47 @@
               </div>
             </div>
           </fieldset>
+          <!-- Customer Modal -->
+        <div id="newCustModal" class="modal hide fade span9 modalA" tabindex="-1" data-keyboard="true" role="dialog" aria-labelledby="newMsgLabel" aria-hidden="true">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="newMsgLabel" >New Customer / زبون جديد</h3>
+          </div>
+          <div class="modal-body">
+            <form class="well span8" id="addCustomer">
+              <div class="row">
+                <div class="span3">
+                  <label>الإسم</label>
+                  <input type="text" class="span3" placeholder="الإسم" name="name" value="">
+                  <label>النوع</label>
+                  <select class="span3" name = "type">
+                    <option value = "customer">زبون</option>
+                    <option value = "company">شركة/مؤسسة حكومية</option>
+                  </select>
+                  <label>اسم المندوب</label>
+                  <input type="text" class="span3" placeholder="إسم المندوب" name="rep" value="">
+                  <label>البريد الإلكتروني</label>
+                  <input type="text" class="span3" placeholder="البريد الإلكتروني" name="email" value="">
+                  <label>رقم الهاتف</label>
+                  <input type="text" class="span3" placeholder="رقم الهاتف" name="phone" value="">
+                  <label>دائن</label>
+                  <input type="text" class="span3" placeholder="دائن بملغ وقدره" name="creditor" value="0">
+                  <label>مدين</label>
+                  <input type="text" class="span3" placeholder="مدين بملغ وقدره" name="debtor" value="0">
+                </div>
+                <div class="span5">
+                  <br>
+                  <label>Notes / ملاحظات</label>
+                  <textarea name="note" id="note" class="input-xlarge span5" rows="10"></textarea>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel / إلغاء</button>
+            <button type="submit" value= "submit" class="btn btn-primary confirmAddCust">Add / إضافة</button>
+          </div>
+        </div>
           <div id="myModal" class="modal hide fade span10 modalA" tabindex="-1" data-keyboard="true" role="dialog" aria-labelledby="newMsgLabel" aria-hidden="true">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -322,8 +363,10 @@
             <tr><td>SAP Order#</td><td><a href="#" id="sapordern" data-type="text" data-pk="{{offer.idoffer}}" data-original-title="Enter SAP order #">{{offer.sapordern}}</a></td></tr>
             <tr><td>Order#</td><td><a href="#" id="ordern" data-value="{{offer.ordern}}" data-type="text" data-pk="{{offer.idoffer}}" data-original-title="Order #">{{offer.ordern}}</a></td></tr>
             <tr><td>العملة</td><td><a href="#" id="currency" data-value="{{formatCurrency offer.currency}}" data-type="select" data-pk="{{offer.idoffer}}" data-original-title="العملة المستخدمة">{{formatCurrency offer.currency}}</a></td></tr>
+            <tr><td>الشركة الموردة <a class="icon-plus invoice" href="#newCustModal" data-toggle="modal"></a></td><td><a href="#" id="customer_idcustomer" data-value="{{offer.customer_idcustomer}}" data-type="select" data-pk="{{offer.idoffer}}" data-original-title="الشركة الموردة">{{offer.customer_idcustomer}}</a></td></tr>
             <tr><td>تاريخ العرض</td><td><a href="#" id="date" data-type="date" data-viewformat="yyyy-mm-dd" data-placement="right" data-pk="{{offer.idoffer}}" data-original-title="ادخل التاريخ">{{formatTime offer.date}}</a></td></tr>
             <tr><td>Product Version</td><td><a href="#" id="producv" data-value="{{offer.producv}}" data-type="text" data-pk="{{offer.idoffer}}" data-original-title="Enter Product Version">{{offer.producv}}</a></td></tr>
+            <tr><td>طريقة الدفع</td><td><a href="#" id="payment" data-value="{{offer.payment}}" data-type="select" data-pk="{{offer.idoffer}}" data-original-title="العملة المستخدمة">{{formatPayment offer.payment}}</a></td></tr>
             <tr><td>ملاحظات</td><td><a href="#" id="note" data-type="textarea" data-pk="{{offer.idoffer}}" data-original-title="ادخل ملاحظات">{{offer.note}}</a></td></tr>
           </tbody>
         </table>
@@ -361,12 +404,17 @@
             </table>
           </div>
         </div>
+        <table  id="offerTable" class="table table-bordered table-striped" style="clear: both">
+              <tbody>
+                <tr class="warning"><td>المدفوع</td><td><a href="#" id="paid" data-type="text" data-pk="{{offer.idoffer}}" data-original-title="المدفوع للزبون">{{offer.paid}}</a></td><td></td><td>المتبقي</td><td id="left">{{offer.left}}</td></tr>
+              </tbody>
+            </table>
       </div>
     </div>
     </script>
     
     <script id="systems-template" class="tmpl" type="text/x-handlebars-template">
-      <legend>Systems / البنود&nbsp;&nbsp;&nbsp;&nbsp; {{#unless status}}<a href="#myModal" role="button" class="btn btn-success btn-small whenActive" data-toggle="modal"><i class="icon-plus icon-white"></i> add new / اضافة بند</a>{{/unless}}</legend>
+      <legend>Systems / البنود</legend>
       <table id = "systems" class="table table-striped table-condesed table-bordered"  >
         <thead>
           <tr>

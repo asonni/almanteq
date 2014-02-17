@@ -2,6 +2,8 @@ $(document).ready(function(){
   var offerd={};
   $.branch= {};
   $.branches={};
+  $.customers= new Array();
+  $.customer={};
   $("#myModal form").validate({
     rules: {
       quantity: {
@@ -23,6 +25,7 @@ $(document).ready(function(){
 
   var $tabs = $('.tabbable li');
   $('#prevtab').on('click', function() {
+
       $tabs.filter('.active').prev('li').find('a[data-toggle="tab"]').tab('show');
   });
 
@@ -30,7 +33,17 @@ $(document).ready(function(){
       $tabs.filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
   });
   
-
+  function updatePaid(paid){
+/*    console.log($('#payment').data("value"));
+*/    var obj = {
+      pk : $.tp.id,
+      name : 'paid',
+      value : paid
+    };
+    $.post("/editOffer", obj, function(data, textStatus, jqXHR){
+      $('#paid').text(paid);
+    });
+  }
   function redraw(systems){
     var html = $.draw({"systems":systems}, "newSystem-template");
     $(html).hide().prependTo("#systems tbody").fadeIn("slow");	
@@ -70,8 +83,17 @@ $(document).ready(function(){
       title: 'Order #',
       disabled: true
     });
+    $('#paid').editable({
+      url: '/editOffer',
+      type: 'text',
+      pk: 1,
+      name: 'paid',
+      title: 'المدفوع',
+      disabled: true
+    });
+    
      
-     $('#currency').editable({
+    $('#currency').editable({
       url: '/editOffer',
       prepend: "لم يتم الإختيار",
       disabled: true,
@@ -83,6 +105,19 @@ $(document).ready(function(){
       ],
       validate: function(value) {
         if($.trim(value) == '') return 'يجب اختيار العملة';
+      }
+    });
+    $('#payment').editable({
+      url: '/editOffer',
+      prepend: "لم يتم الإختيار",
+      disabled: true,
+      source: [
+      {value: "CASH", text: 'نقداً'},
+      {value: "ACCOUNT", text: 'على الحساب'},
+      {value: "HALF", text: 'دفع جزء وباقي جزء'},
+      ],
+      validate: function(value) {
+        if($.trim(value) == '') return 'يجب اختيار طريقة الدفع';
       }
     });
      $('#date').editable({
@@ -409,6 +444,7 @@ $('#otherex').editable({
          redraw(data);
          $('#paidinf').val(data.result.paidinf);
          $('#paidinlyd').val(data.result.paidinlyd);
+         updatePaid(data.result.paidinlyd);
          $('#overall').val(data.result.overall);
          //updateSys(data);// update all systems when add /delete or edit
          var idbranch = $('#branch_idbranch').val(),
@@ -441,6 +477,7 @@ $('#otherex').editable({
           $('#s'+sysId).remove();
           $('#paidinf').val(result.paidinf);
           $('#paidinlyd').val(result.paidinlyd);
+          updatePaid(result.paidinlyd);
           $('#overall').val(result.overall);
           $('.top-right').notify({
             message: { text: 'تمت عملية المسح بنجاح' },
@@ -625,6 +662,7 @@ $('#otherex').editable({
               $.draw({"offer":offer[0]}, "offer-template", "#offer-target");
               $('#oDate').val($.getDate());
               editOffer();
+              getCust();
               offerd=offer[0];
               $('#offerLink').text(offer[0].offern);
             }
@@ -659,6 +697,62 @@ $('#otherex').editable({
         $.draw({"name":user}, "user-template", "#user-target");
       });
     }
+
+
+    function getCust() {
+      $.get('/action/getCustomersNames', function (data) {
+        for ( var  i = 0 ; i< data.length; i++){
+          var k = new Object({value:data[i].value,text : data[i].text});
+          $.customers.push(k);
+          $.customer[data[i].value] = {
+            text : data[i].text,
+            creditor : data[i].creditor,
+            debtor : data[i].debtor
+          };
+        }
+
+        $('#customer_idcustomer').editable({
+          url: '/editOffer',
+          prepend: "لم يتم الإختيار",
+          disabled: true,
+          source: $.customers,
+        });
+        var idcustomer = $('#customer_idcustomer').text();
+        if(idcustomer!="undefined"){
+          console.log($.customer);
+          $('#customer_idcustomer').text($.customer[idcustomer].text);
+        }
+       /* var custs = $('#customers');
+        $(custs).select2({
+          data : $.customers,
+          width : "170px"
+        });
+        $(custs).select2('val','0');*/
+      });
+    }
+    $('body').on("click", ".confirmAddCust", function(){
+      console.log("confirmaddmsg");
+      $("#addCustomer").submit();
+    });
+
+    $('body').on('submit', '#addCustomer', function(data) {
+      $.post("/addCustomer", $("#addCustomer").serializeObject(), function(data, textStatus, jqXHR){
+        $('#newCustModal').modal('hide');
+        $('#customer_idcustomer').data('value',data.idcustomer);
+        $('#customer_idcustomer').text(data.name);
+        
+        var o = new Object({value : data.idcustomer ,text : data.name});
+        $.customers.push(o);
+        var obj = {
+          pk : $.tp.id,
+          name : 'customer_idcustomer',
+          value : data.idcustomer
+        };
+        $.post("/editOffer", obj, function(data, textStatus, jqXHR){
+        });
+      });
+      return false;
+    });
    
    getOffer();
    getSystems();
