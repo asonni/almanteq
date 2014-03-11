@@ -113,6 +113,9 @@ exports.getMgr = {
       case "getUserRep" :
         this.handlegetUserRep(req.params,res,cb);
         break;
+      case "getCustOffers" :
+        this.handleGetCustOffers(req.params,res,cb);
+        break;
 	    default:
 		  /*defaultMgr.handleDefault(req, res);*/
 	  }	
@@ -308,6 +311,11 @@ exports.getMgr = {
   },
   handlegetUserRep : function (req,res,cb){
     invoiceMgr.getUserRep(function (result){
+      cb(result);
+    });
+  },
+  handleGetCustOffers : function (req,res,cb){
+    offerMgr.getCustOffers(req.id,function (result){
       cb(result);
     });
   },

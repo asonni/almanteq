@@ -32,16 +32,24 @@ $(document).ready(function(){
   $('#nexttab').on('click', function() {
       $tabs.filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
   });
-  
+
   function updatePaid(paid){
-/*    console.log($('#payment').data("value"));
-*/    var obj = {
+    var left = parseFloat($('#overall').val()-paid);
+    var obj = {
       pk : $.tp.id,
       name : 'paid',
       value : paid
     };
     $.post("/editOffer", obj, function(data, textStatus, jqXHR){
       $('#paid').text(paid);
+      obj = {
+        pk : $.tp.id,
+        name : 'left',
+        value : left
+      };
+      $.post("/editOffer", obj, function(data, textStatus, jqXHR){
+        $('#left').text(left);
+      });
     });
   }
   function redraw(systems){
@@ -89,7 +97,18 @@ $(document).ready(function(){
       pk: 1,
       name: 'paid',
       title: 'المدفوع',
-      disabled: true
+      disabled: true,
+      success: function(response,newValue){
+        var left = parseFloat($('#overall').val()-newValue),
+        obj = {
+          pk : $.tp.id,
+          name : 'left',
+          value : left
+        };
+        $.post("/editOffer", obj, function(data, textStatus, jqXHR){
+            $('#left').text(left);
+        });
+      }
     });
     
      
@@ -206,6 +225,7 @@ $(document).ready(function(){
             };
             $.post("/editOffer", obj, function(data, textStatus, jqXHR){
               $('#overall').val(Math.round(total,3));
+              updatePaid(Math.round(total,3));
             });
           });
         } 
@@ -444,7 +464,7 @@ $('#otherex').editable({
          redraw(data);
          $('#paidinf').val(data.result.paidinf);
          $('#paidinlyd').val(data.result.paidinlyd);
-         updatePaid(data.result.paidinlyd);
+         updatePaid(data.result.overall);
          $('#overall').val(data.result.overall);
          //updateSys(data);// update all systems when add /delete or edit
          var idbranch = $('#branch_idbranch').val(),
@@ -477,7 +497,7 @@ $('#otherex').editable({
           $('#s'+sysId).remove();
           $('#paidinf').val(result.paidinf);
           $('#paidinlyd').val(result.paidinlyd);
-          updatePaid(result.paidinlyd);
+          updatePaid(result.overall);
           $('#overall').val(result.overall);
           $('.top-right').notify({
             message: { text: 'تمت عملية المسح بنجاح' },

@@ -135,21 +135,13 @@ $(document).ready(function(){
     }
   }
 
-  /*function getSpecs(){
+  function getCustOffers(){
     if($.tp.id){
-      $.get('/action/getSpecs/'+$.tp.id, function(specs) {
-        if(specs instanceof Array) {
-          $.draw({"specs":specs}, "specs-template", "#specs-target");
-          $.draw({"specs":specs}, "editSpecs-template", "#editSpecs-target");
-          $('#enableSpecs').click(function() {
-          $('#specs .editable').editable('toggleDisabled');
-            });
-        } else {
-          getSpecs();
-        }
+      $.get('/action/getCustOffers/'+$.tp.id, function(offers) {
+        console.log(offers);
       });
     }
-  }*/
+  }
   function getUser(){
     $.get('/getUser').success(function(user){
       console.log("ok"+user);
@@ -164,7 +156,6 @@ $(document).ready(function(){
     obj = JSON.stringify(obj);
     $.get('/action/getCustomerSales/'+obj).success(function(sales) {
         if(sales instanceof Array){
-          console.log(sales);
           
           $.size= sales.length;
           $.draw({"sales":sales}, "sales-template", "#sales-target");
@@ -201,6 +192,7 @@ $(document).ready(function(){
 /*  getSpecs();
 */  getUser();
     getSales();
+    getCustOffers();
   //defaults
 
   });

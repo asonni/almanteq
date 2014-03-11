@@ -130,6 +130,7 @@
       </table>
     </script>
     <script id="sales-template" class="tmpl" type="text/x-handlebars-template">
+    <div class="well">
       <legend>Invoices / الفواتير&nbsp;&nbsp;&nbsp;&nbsp; <a href="/newInvoice" role="button" class="btn btn-success btn-small" data-toggle="modal"><i class="icon-plus icon-white"></i> new invoice / فاتورة جديد</a>
         <ul class="pager pull-right">
           <li id="prevli"><a href="#" id="prev">السابق</a></li>
@@ -165,6 +166,33 @@
         {{/each}}
         </tbody>
       </table>
+    </div>
+    <div class="well">
+      <legend>Purchases / المشتريات&nbsp;&nbsp;&nbsp;&nbsp;
+        <ul class="pager pull-right">
+          <li id="prevli1"><a href="#" id="prev1">السابق</a></li>
+          <li id="nextli1"><a href="#" id="next1">التالي</a></li>
+        </ul>
+      </legend>
+      <table id = "scroll1" class="table table-striped table-condensed">
+        <thead>
+          <tr>
+            <th>رقم الفاتورة</th>
+            <th>المدفوع</th>
+            <th>المتبقي</th>
+          </tr>
+        </thead>
+        <tbody>
+        {{#each sales}}
+          <tr>
+            <td>{{this.idinvoice}}</td>
+            <td>{{this.uname}}</td>
+            <td>{{this.uname}}</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </div>
     </script>
     <script src="js/jquery-1.10.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
