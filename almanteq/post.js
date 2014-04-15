@@ -17,7 +17,6 @@ var	url=require('url'),
 
 exports.postMgr = {
   post : function(req,res,user,cb){
-    console.log(req.body);
     var body = this.getObj(req.body),
       base = req.url;
     util.log("POST "+JSON.stringify(req.url));
@@ -32,10 +31,13 @@ exports.postMgr = {
         this.handleAddCustomer(req,res,body,cb);
         break;
       case "/addSystem" :
-        this.handleAddSystem(req,res,body,cb);
+        this.handleAddSystem(req,res,body,user,cb);
         break;
       case "/addSpec" :
         this.handleAddSpec(req,res,body,cb);
+        break;
+      case "/addReceipt" :
+        this.handleAddReceipt(req,res,body,user,cb);
         break;
       case "/addBranch" :
         this.handleAddBranch(req,res,body,cb);
@@ -73,7 +75,6 @@ exports.postMgr = {
   },
   handleSignUp : function(req,res,body,cb){
     userMgr.addUser(body,function(result){
-      console.log(result);
       cb(result);
     })
   },
@@ -98,7 +99,8 @@ exports.postMgr = {
       }
     });
   },
-  handleAddSystem : function(req,res,body,cb) {
+  handleAddSystem : function(req,res,body,user,cb) {
+    //console.log(body);
     var id = null,
         flag = false;
     var specs = {},
@@ -114,7 +116,10 @@ exports.postMgr = {
           left : body.quantity,
           totalprice : body.totalprice,
           note : body.note,
-          offer_idoffer : body.offer_idoffer
+          offer_idoffer : body.offer_idoffer,
+          selltype : body.selltype,
+          sellprice : body.sellprice,
+          user_iduser : user
         };
 
     specs = {
@@ -199,17 +204,22 @@ exports.postMgr = {
       cb(result);
     });
   },
+  handleAddReceipt : function(req,res,body,user,cb) {
+    body["user_iduser"]=user;
+    customerMgr.addReceipt(body, function (result){
+      body["idreceipt"]=result;
+      cb(body)
+    });
+  },
   handleMakeInvoice : function(req,res,body,user,cb) {
     var final = false;
     if (body.main.type =="FINAL") {
       final = true;
-      console.log("Final");
     }
     body.main["user_iduser"]=user;
     invoiceMgr.addInvoice(this.getObj(body.main),function(invoice_idinvoice){
       for(var themeKey in body.slctdTh){
         var val1=body.slctdTh[themeKey].val;
-        console.log(val1);
         var obj1={
           name : body.slctdTh[themeKey].text,
           selected : 1,
@@ -282,9 +292,7 @@ exports.postMgr = {
     for (var p in obj) {
       
       if(p!= "__proto__"){
-       /* console.log(p);
-      console.log(obj[p]);*/
-       newObj[p]=obj[p];
+        newObj[p]=obj[p];
      }
     }
     return newObj;

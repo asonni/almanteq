@@ -58,7 +58,7 @@
             <div class="tabbable">
               <ul class="nav nav-tabs" id="tab_bar">
                 <li class="active"><a href="#tab1" data-toggle="tab">معلومات عن العرض</a></li>
-                <li><a href="#tab2" data-toggle="tab">الفروع</a></li>
+                <li><a href="#tab2" data-toggle="tab">الأصناف</a></li>
                 <li><a href="#tab3" data-toggle="tab">البنود</a></li>
               </ul>
               
@@ -185,8 +185,23 @@
                 </div>
                 <div class="span6">
                   <br>
+                  <div class="row-fluid">
+                    <label><b>طريقة التسعير</b></label>
+                    <label class="radio">
+                      <input type="radio" name="selltype" id="auto" value="AUTO" checked>
+                      تسعير المنظومة الإفتراضي
+                    </label>
+                    <label class="radio">
+                      <input type="radio" name="selltype" id="manual" value="MANUAL">
+                      تسعير يدوي
+                    </label>
+                    <div id="selltype-target" class="hide">
+                      <label>سعر البيع للقطعة</label>
+                      <input type="text" class="span3" placeholder="سعر البيع" id ="sellprice" name="sellprice" value="0">
+                    </div>
+                    </div>
                   <label>Description / شرح</label>
-                  <textarea name="note" id="note" class="input-xlarge span6" rows="10"></textarea>
+                  <textarea name="note" id="note" class="input-xlarge span6" rows="5"></textarea>
                   <input type="hidden" name="count" value="1" />
                   <div class="control-group span6" id="fields">
                     <label class="control-label" for="field1">Specs / مواصفات &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" role="button" class="btn btn-success btn-mini" onClick="addFormField()"><i class="icon-plus icon-white"></i></a></label>
@@ -267,7 +282,7 @@
           <!-- New branch modal -->
           <div id="addBranchModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-body">
-              <p>فرع جديد</p>
+              <p>صنف جديد</p>
               <form  id="addBranch">
                 <input type="text"  id="name" name="name" value="">
                 <input type="hidden" id="parent" name="parent" value="">
@@ -281,7 +296,7 @@
           <!-- Edit branch modal -->
           <div id="editBranchModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-body">
-              <p>تعديل فرع</p>
+              <p>تعديل صنف</p>
               <form  id="editBranch">
                 <input type="text"  id="ename" name="ename" value="">
                 <input type="hidden" id="eid" name="eid" value="">
@@ -295,7 +310,7 @@
           <!-- Delete branch modal -->
           <div id="delBranchModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-body">
-              <p>مسح فرع</p>
+              <p>مسح صنف</p>
               <form  id="delBranch">
                 <input type="text"  id="dname" name="dname" value="">
                 <input type="hidden" id="did" name="did" value="">

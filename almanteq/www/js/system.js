@@ -118,6 +118,7 @@ $(document).ready(function(){
 		obj["system_iditem"]= $.tp.id;
     obj["offer_idoffer"]= $.tp.uid;
 		$.post("/addSpec", obj, function(data, textStatus, jqXHR){
+      console.log("ok");
 			$('#myModal').modal('hide');
 			redraw(data);
        $('.top-right').notify({

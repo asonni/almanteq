@@ -55,6 +55,18 @@ $(document).ready(function(){
 					return "غير معروف";
 			}
 		},
+		"formatReceipt" : function(receipt){
+			switch (receipt){
+				case "RECIEVE" :
+					return "إيصال قبض";
+					break;
+				case "PAY" :
+					return "إيصال صرف";
+					break;
+				default : 
+					return "غير معروف";
+			}
+		},
 		"stockStatus" : function(quantity,left){
 			if (left < quantity/4) {
 				return "error";
@@ -104,11 +116,41 @@ $(document).ready(function(){
 				return "نهائية";
 			} 
 		},
+		"checkStatus" : function(months,date,status){
+			if(status){
+				return "warning";
+			} else {
+				var newDate = new Date(),
+					valid = new Date(date);
+					valid = new Date(date).setMonth(valid.getMonth()+months);
+				if(newDate > valid)
+					return "important";
+				else 
+					return "info";
+			} 
+		},
 	};
 
 	var helpers = $.each(funcs, function(key, val){
 		Handlebars.registerHelper(key, val);
 	});
+
+	$.fn.serializeObject = function()
+	{
+		var o = {};
+		var a = this.serializeArray();
+		$.each(a, function() {
+			if (o[this.name] !== undefined) {
+				if (!o[this.name].push) {
+					o[this.name] = [o[this.name]];
+				}
+				o[this.name].push(this.value || '');
+			} else {
+				o[this.name] = this.value || '';
+			}
+		});
+		return o;
+	};
 
 
 });

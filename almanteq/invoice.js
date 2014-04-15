@@ -156,33 +156,5 @@ exports.invoiceMgr = {
     });
   },
 
-  /*SELECT Orders.OrderID, Customers.CustomerName, Orders.OrderDate
-FROM Orders
-INNER JOIN Customers
-ON Orders.CustomerID=Customers.CustomerID;*/
-
-  /*editBranch : function(body,cb){
-    mysqlMgr.connect(function (conn) {
-      conn.query('UPDATE `branch` SET `'+body.name+'` = ? WHERE `idbranch` = ?',  [body.value,body.pk],  function(err, result) {
-        if(err) {
-          util.log(err);
-        } else {
-          cb(true);
-        }
-      });
-    });
-  },
-  
-  delBranch : function(id,cb){
-    mysqlMgr.connect(function (conn) {
-      conn.query('DELETE FROM `branch` WHERE `idbranch` = ?', id,  function(err, result) {
-        if(err) {
-          util.log(err);
-        } else {
-          cb(true);
-        }
-      });
-    });
-  },*/
 }
 

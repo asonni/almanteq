@@ -44,23 +44,7 @@ $(document).ready(function(){
 			$(custs).select2('val','0');
 		});
 	}
-	//////////////////////////////////////////////////////////////////////////
-	/*getBranches();
-	function getBranches() {
-		$.get('/action/getBranches', function (data) {
-			for ( var  i = 0 ; i< data.length; i++){
-				var k = new Object({id:i,value : data[i].idbranch ,text : data[i].name});
-				branches.push(k);
-				
-			}
-			var brs = $('#branches');
-			$(brs).select2({
-				data : branches,
-				width : "150px"
-			});
-			//$(custs).select2('val','0');
-		});
-	}*/
+	
 	var $tabs = $('.tabbable li');
 
 	$('#prevtab').on('click', function() {
@@ -95,9 +79,11 @@ $(document).ready(function(){
 		if($("#invoicetype").val()==="FINAL"){
 			$('#ifFinal').show();
 			$('#regs').hide();
+			$('#paymentinfo').show();
 		} else {
 			$('#ifFinal').hide();
 			$('#regs').show();
+			$('#paymentinfo').hide();
 		}
 	});
 
@@ -115,11 +101,15 @@ $(document).ready(function(){
 			$('#tax').val(tax);
 			$('#overall').val(0.5 * Math.ceil(2.0* (tax+$.total)));
 			$('#paid').val(0.5 * Math.ceil(2.0* (tax+$.total)));
+			$('#fullypaid').text(0.5 * Math.ceil(2.0* (tax+$.total)));
 		} else {
 			$('#tax').val(0);
 			$('#overall').val(0.5 * Math.ceil(2.0* ($.total)));
 			$('#paid').val(0.5 * Math.ceil(2.0* ($.total)));
+			$('#fullypaid').text(0.5 * Math.ceil(2.0* ($.total)));
 		}
+		$('#unpaid').val(0);
+		$('#fullyunpaid').text(0);
 	}
 
 	$('#paid').on('input', function() {
@@ -127,14 +117,17 @@ $(document).ready(function(){
 		x = 0,
 		paid= parseFloat($('#paid').val()),
 		overall = parseFloat($('#overall').val());
+		$('#fullypaid').text(paid);
 		if (paid < overall){
 			dif = overall - paid;
 			$('#unpaid').val(dif);
+			$('#fullyunpaid').text(dif);
+
 			
 			/*$('#creditor').val()*/
 		} else {
-			console.log($("#customers").select2('data').value);
 			$('#unpaid').val(0);
+			$('#fullyunpaid').text(0);
 		}
 	});
 
@@ -182,7 +175,7 @@ $(document).ready(function(){
 
 	function preview(){
 		$('#invType').text($('#invoicetype option:selected').html());
-		$('#toCustomer').text($('#customers').text());
+		$('#toCustomer').text($("#customers").select2('data').text);
 		$('#invoiceDate').text($('#oDate').val());
 		var templ = '',
 		regs = '';
@@ -393,11 +386,20 @@ $('body').on("click", ".invoice", function(){
 
 	var sysId = $("#sysId").val();
 	$.get('/action/getItemPrice/'+sysId, function (data) {
-		$("#price").val(data.retail);
-		$("#total").val(data.retail);
-		$("#retailPrice").val(data.retail);
-		$("#afterCostPrice").val(data.aftercost);
-		$("#wholeSalePrice").val(data.wholesale);
+		console.log(data.selltype);
+		if(data.selltype=="MANUAL"){
+			$("#price").val(data.sellprice);
+			$("#total").val(data.sellprice);
+			$("#retailPrice").val(data.sellprice);
+			$("#afterCostPrice").val(data.sellprice);
+			$("#wholeSalePrice").val(data.sellprice);
+		} else {
+			$("#price").val(data.retail);
+			$("#total").val(data.retail);
+			$("#retailPrice").val(data.retail);
+			$("#afterCostPrice").val(data.aftercost);
+			$("#wholeSalePrice").val(data.wholesale);
+		}
 		if(data.instock) {
 			$("#left").text(data.left);	
 		} else {
@@ -436,9 +438,9 @@ $('body').on("click", ".confirmAddInvoice", function(){
 
 	var html = "",
 	obj = {},
-	price = $("#price").val(),
+	price = parseFloat($("#price").val()),
 	system = $("#system").val(),
-	quantity = $("#quantity").val(),
+	quantity = parseInt($("#quantity").val()),
 	warranty = $("#warranty").val(),
 	totalPrice = Math.round($("#total").val(),3),
 	theme = $("#theme").val(),
@@ -446,19 +448,32 @@ $('body').on("click", ".confirmAddInvoice", function(){
 
 	if($.objects[theme+sysId] != undefined) {
 		$("#invoiceModal").modal('hide');
-		$('.top-right').notify({
-			type: 'error',
-			message: { text: 'لا يمكنك إضافة نفس البند أكثر من مرة في نفس الموضوع!' },
-			fadeOut: { enabled: true, delay: 3000 }
-		}).show();
+		$("#p"+theme+sysId).text(price);
+		var newQuantity = quantity+parseInt($("#q"+theme+sysId).text()),
+			newTotal = Math.round(price*newQuantity);
+		$("#q"+theme+sysId).text(newQuantity);
+		$("#t"+theme+sysId).text(newTotal,3);
+		if($('#c'+theme).is(":checked")||theme ==1){
+			$.objects[theme+sysId].price = price;
+			$.objects[theme+sysId].quantity = newQuantity;
+			$.objects[theme+sysId].totalprice =  newTotal;
+			$.total+=parseFloat(totalPrice);
+			$.total = Math.round($.total,3);
+		} else {
+
+			$.subObjects[theme+sysId].price = price;
+			$.subObjects[theme+sysId].quantity = newQuantity;
+			$.subObjects[theme+sysId].totalprice =  newTotal;
+		}
+
 	} else {
 
 
 		html = '<tr id="i'+theme+sysId+'" >'+
 		'<td>'+system+'</td>'+
-		'<td>'+quantity+'</td>'+
-		'<td>'+price+'</td>'+
-		'<td>'+totalPrice+'</td>'+
+		'<td id="q'+theme+sysId+'">'+quantity+'</td>'+
+		'<td id="p'+theme+sysId+'">'+price+'</td>'+
+		'<td id="t'+theme+sysId+'">'+totalPrice+'</td>'+
 		'<td><a class="icon-remove remove" href="#removeModal" onClick=\'removeMe("'+system+'","'+theme+sysId+'");return false;\' data-toggle="modal" ></a></td>'+
 		'</tr>';
 		$("#invoiceModal").modal('hide');
@@ -469,7 +484,7 @@ $('body').on("click", ".confirmAddInvoice", function(){
 			price : price,
 			quantity : quantity,
 			warranty : warranty,
-			totalprice : totalPrice,
+			totalprice : Math.round(totalPrice,3),
 			theme : theme
 		}
 
@@ -484,7 +499,6 @@ $('body').on("click", ".confirmAddInvoice", function(){
 		}
 
 		$('#invoicetype').attr("disabled", true);
-		console.log($.total);
 		$('#total1').val($.total);
 		$.draw({"systems":null}, "systems-template", "#systems-target");
 		$.get('/action/getSystem/'+sysId, function (sysObj) {

@@ -143,9 +143,9 @@ exports.offerMgr = {
       });
     });
   },
-  getCustOffers : function(id,cb) {
+  getCustOffers : function(id,limit,cb) {
     mysqlMgr.connect(function (conn){
-      conn.query('SELECT * FROM `offer` WHERE `customer_idcustomer` = ? ORDER BY `idoffer` DESC ',id,function(err,result) {
+      conn.query('SELECT * FROM `offer` WHERE `customer_idcustomer` = ? ORDER BY `idoffer` DESC LIMIT '+limit+', 10',id,function(err,result) {
         if(err) {
         util.log("mysql lib err "+err);
         } else {

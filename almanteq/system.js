@@ -188,6 +188,8 @@ exports.systemMgr = {
         overallex=0,
         paidinlyd=0,
         aftercost=0,
+        selltype=null,
+        sellprice=0,
         retail=0,
         wholesale=0,
         upper=0,
@@ -197,7 +199,7 @@ exports.systemMgr = {
         left=0,
         obj={};
     mysqlMgr.connect(function (conn){
-      conn.query('SELECT `offer_idoffer`,`itemprice`,`instock`,`left` FROM `system` WHERE `iditem`= ? ',id,function(err,result) {
+      conn.query('SELECT `offer_idoffer`,`itemprice`,`instock`,`left`,`selltype`,`sellprice` FROM `system` WHERE `iditem`= ? ',id,function(err,result) {
         if(err) {
         util.log("mysql lib err "+err);
         } else {
@@ -205,6 +207,10 @@ exports.systemMgr = {
           itemprice = result[0].itemprice;
           instock = result[0].instock;
           left = result[0].left;
+          selltype = result[0].selltype;
+          sellprice = result[0].sellprice;
+          console.log(selltype);
+
           conn.query('SELECT `rate`,`overallex`,`paidinlyd`,`retail`,`wholesale` FROM `offer` WHERE idoffer = ? ',idoffer,function(err,result) {
             if(err) {
               util.log("mysql lib err "+err);
@@ -224,6 +230,8 @@ exports.systemMgr = {
               obj.aftercost = aftercost;
               obj.instock = instock;
               obj.left = left;
+              obj.sellprice = sellprice;
+              obj.selltype = selltype;
               cb(obj);
             }
           });

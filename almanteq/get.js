@@ -116,6 +116,12 @@ exports.getMgr = {
       case "getCustOffers" :
         this.handleGetCustOffers(req.params,res,cb);
         break;
+      case "getReceipts" :
+        this.handleGetReceipts(req.params,res,cb);
+        break;
+      case "getReceipt" :
+        this.handleGetReceipt(req.params,res,cb);
+        break;
 	    default:
 		  /*defaultMgr.handleDefault(req, res);*/
 	  }	
@@ -315,7 +321,20 @@ exports.getMgr = {
     });
   },
   handleGetCustOffers : function (req,res,cb){
-    offerMgr.getCustOffers(req.id,function (result){
+    var obj = JSON.parse(req.id);
+    offerMgr.getCustOffers(obj.id,obj.limit,function (result){
+      cb(result);
+    });
+  },
+  handleGetReceipts : function (req,res,cb){
+    var obj = JSON.parse(req.id);
+    customerMgr.getReceipts(obj.id,obj.limit,function (result){
+      cb(result);
+    });
+  },
+  handleGetReceipt : function (req,res,cb){
+    var obj = JSON.parse(req.id);
+    customerMgr.getReceipt(obj.id,obj.cid,function (result){
       cb(result);
     });
   },

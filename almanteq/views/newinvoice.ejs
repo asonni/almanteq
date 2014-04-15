@@ -335,15 +335,13 @@
                         <thead>
                           <th>المدفوع</th>
                           <th>الباقي</th>
-                          <th>دائن</th>
-                          <th>مدين</th>
+                          <th>الرصيد</th>
                         </thead>
                         <tbody>
                           <tr>
                           <td><input class="input-small" id="paid" name="paid" type="number" step="0.001" value="0" min="0"></td>
                           <td><input type="text" class="input-mini" readonly id="unpaid" name="unpaid"  value="0"></td>
                           <td><input type="text" class="input-mini" readonly id="creditor" name="creditor"  value="0"></td>
-                          <td><input type="text" class="input-mini" readonly id="debtor" name="debtor"  value="0"></td>
                         </tr>
                         </tbody>
                       </table>
@@ -357,32 +355,34 @@
                   <hr class="border-line">
                 </div>
                 <div class="tab-pane" id="tab3">
-                  <div class="span2" >
-                    <h5>التاريخ : <span id ="invoiceDate" class="date" data-date-format="yyyy-mm-dd" ></span></h5>
-                  </div>
-                  <br>
-                  <div class="span3" >
-                    <div class="offset1">
-                      <legend>فاتورة <b id ="invType">مبدئية</b></legend>
+                  <div class="row-fluid">
+                    <div class="span2" >
+                      <h5>التاريخ : <span id ="invoiceDate" class="date" data-date-format="yyyy-mm-dd" ></span></h5>
+                    </div>
+                    <div class="span3" >
+                      <div class="offset1">
+                        <legend>فاتورة <b id ="invType">مبدئية</b></legend>
+                      </div>
+                    </div>
+                    <div class="pull-right" dir = "rtl">
+                      <legend>إلى الأخوة / <b id ="toCustomer">Almanteq</b></legend>
                     </div>
                   </div>
-                  <br>
-                  <div class="pull-right" dir = "rtl">
-                    <legend>إلى الأخوة / <b id ="toCustomer">Almanteq</b></legend>
+                  <div class="row-fluid">
+                    <table class="table table-condensed table-bordered">
+                      <thead>
+                        <th>Product-Number</th>
+                        <th>Description</th>
+                        <th>QTY</th>
+                        <th>WTY</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                      </thead>
+                      <tbody id ="preview">
+                      </tbody>
+                    </table>
+                    <hr class="border-line">
                   </div>
-                  <table class="table table-condensed table-bordered">
-                    <thead>
-                      <th>Product-Number</th>
-                      <th>Description</th>
-                      <th>QTY</th>
-                      <th>WTY</th>
-                      <th>Unit Price</th>
-                      <th>Total</th>
-                    </thead>
-                    <tbody id ="preview">
-                    </tbody>
-                  </table>
-                  <hr class="border-line">
                   <table class="table table-condensed table-bordered span3   pull-right">
                     <tbody>
                       <tr>
@@ -399,6 +399,20 @@
                       </tr>
                     </tbody>
                   </table>
+                  <div id="paymentinfo" class="hide">
+                    <table class="table table-condensed table-bordered span3   pull-right" dir="rtl">
+                      <tbody>
+                        <tr>
+                          <th>المدفوع</th>
+                          <td id="fullypaid">0</td>
+                        </tr>
+                        <tr>
+                          <th>المتبقي</th>
+                          <td id="fullyunpaid">0</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                   <div id="alt">
                   </div>
                   <div id="regs" class="span8" dir="rtl">
