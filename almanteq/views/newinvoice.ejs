@@ -60,7 +60,6 @@
             <h3 id="newMsgLabel" >هل انت متأكد من إضافة هذا البند إلى الفاتورة الحالية؟</h3>
           </div>
           <div class="modal-body">
-            
             <form  id="addSys">
               <div class="row">
                 <div class="span3">
@@ -359,9 +358,9 @@
                     <div class="span2" >
                       <h5>التاريخ : <span id ="invoiceDate" class="date" data-date-format="yyyy-mm-dd" ></span></h5>
                     </div>
-                    <div class="span3" >
-                      <div class="offset1">
-                        <legend>فاتورة <b id ="invType">مبدئية</b></legend>
+                    <div class="span5" >
+                      <div class="offset7">
+                        <h3>فاتورة <b id ="invType">مبدئية</b></h3>
                       </div>
                     </div>
                     <div class="pull-right" dir = "rtl">
@@ -383,35 +382,41 @@
                     </table>
                     <hr class="border-line">
                   </div>
-                  <table class="table table-condensed table-bordered span3   pull-right">
-                    <tbody>
-                      <tr>
-                        <th>SubTotal</th>
-                        <td id="subtPr">0</td>
-                      </tr>
-                      <tr>
-                        <th>TAX</th>
-                        <td id="taxPr">0</td>
-                      </tr>
-                      <tr>
-                        <th>Total</th>
-                        <td id="totalPr">0</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div id="paymentinfo" class="hide">
-                    <table class="table table-condensed table-bordered span3   pull-right" dir="rtl">
-                      <tbody>
-                        <tr>
-                          <th>المدفوع</th>
-                          <td id="fullypaid">0</td>
-                        </tr>
-                        <tr>
-                          <th>المتبقي</th>
-                          <td id="fullyunpaid">0</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                  <div class="row-fluid">
+                    <div class="span3 pull-right">
+                      <table class="table table-condensed table-bordered ">
+                        <tbody>
+                          <tr>
+                            <th>SubTotal</th>
+                            <td id="subtPr">0</td>
+                          </tr>
+                          <tr>
+                            <th>TAX</th>
+                            <td id="taxPr">0</td>
+                          </tr>
+                          <tr>
+                            <th>Total</th>
+                            <td id="totalPr">0</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="row-fluid">
+                    <div id="paymentinfo" class="hide span3 pull-right" >
+                      <table class="table table-condensed table-bordered" dir="rtl">
+                        <tbody>
+                          <tr>
+                            <th>المدفوع</th>
+                            <td id="fullypaid">0</td>
+                          </tr>
+                          <tr>
+                            <th>المتبقي</th>
+                            <td id="fullyunpaid">0</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                   <div id="alt">
                   </div>
@@ -485,20 +490,32 @@
         $("#themeId").val(id);
         $("#themeName").val($.themes[id].text);
       }
+      function calcTotal(){
+        $.total=0;
+        for (key in $.objects){
+          $.total+=0.5 * Math.ceil(2.0*($.objects[key].price * $.objects[key].quantity));
+        }
+      }
       function calcTax(flag) {
+        calcTotal();
         var tax=$.total * 0.01;
         tax = 0.5 * Math.ceil(2.0*tax);
         tax = tax + 0.005 * tax;
         tax = 0.5 * Math.ceil(2.0*tax);
+        $('#total1').val(0.5 * Math.ceil(2.0* $.total));
         if (flag || $("#ifTax").is(":checked") ) {
           $('#tax').val(tax);
           $('#overall').val(0.5 * Math.ceil(2.0* (tax+$.total)));
           $('#paid').val(0.5 * Math.ceil(2.0* (tax+$.total)));
+          $('#fullypaid').text(0.5 * Math.ceil(2.0* (tax+$.total)));
         } else {
           $('#tax').val(0);
           $('#overall').val(0.5 * Math.ceil(2.0* ($.total)));
           $('#paid').val(0.5 * Math.ceil(2.0* ($.total)));
+          $('#fullypaid').text(0.5 * Math.ceil(2.0* ($.total)));
         }
+        $('#unpaid').val(0);
+        $('#fullyunpaid').text(0);
       }
     </script>
     <script src="/js/jquery-1.10.1.min.js"></script>

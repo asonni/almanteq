@@ -36,11 +36,11 @@
             </div>
           </div>
         </div>
-       
         <div class="pull-right" dir = "rtl">
           <legend>إلى الأخوة / <b id ="toCustomer">Almanteq</b></legend>
         </div>
-        <table class="table table-condensed table-bordered">
+        <div class="row-fluid">
+          <table class="table table-condensed table-bordered">
           <thead>
             <th>Product-Number</th>
             <th>Description</th>
@@ -51,24 +51,51 @@
           </thead>
           <tbody id ="preview">
           </tbody>
-        </table>
+          </table>
+        </div>
         <hr class="border-line">
-        <table class="table table-condensed table-bordered span4 pull-right">
-          <tbody>
-            <tr>
-              <th>SubTotal</th>
-              <td id="subtPr">0</td>
-            </tr>
-            <tr>
-              <th>TAX</th>
-              <td id="taxPr">0</td>
-            </tr>
-            <tr>
-              <th>Total</th>
-              <td id="totalPr">0</td>
-            </tr>
-          </tbody>
-        </table>
+        <div clas="row-fulid">
+          <table class="table table-condensed table-bordered span4 pull-right">
+            <tbody>
+              <tr>
+                <th>SubTotal</th>
+                <td id="subtPr">0</td>
+              </tr>
+              <tr>
+                <th>TAX</th>
+                <td id="taxPr">0</td>
+              </tr>
+              <tr>
+                <th>Total</th>
+                <td id="totalPr">0</td>
+              </tr>
+            </tbody>
+          </table>
+          <div id="paymentinfo" class="hide span3 pull-right" >
+            <table class="table table-condensed table-bordered" dir="rtl">
+              <tbody>
+                <tr>
+                  <th>المدفوع</th>
+                  <td id="fullypaid">0</td>
+                </tr>
+                <tr>
+                  <th>المتبقي</th>
+                  <td id="fullyunpaid">0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div id="balanceinfo" class="hide span3 pull-right" >
+            <table class="table table-condensed table-bordered" dir="rtl">
+              <tbody>
+                <tr>
+                  <th>رصيد الزبون</th>
+                  <td dir="lrt" id="balance">0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
         <div id="alt">
         </div>
         <div id="regs" class="span8" dir="rtl">
