@@ -21,7 +21,7 @@
     <div class="container">
       <div class="masthead">
         <div class="row-fluid">
-          <h3 class="muted pull-right"><img id="ownerLogo" src="/img/logo.jpg" class="logo"> Almanteq</h3>
+          <h3 class="muted pull-right"><a href=#><img id="ownerLogo" src="/img/logo.jpg" class="logo"> </a>Almanteq</h3>
            <div class="span4" >
             <br>
             <h4 >التاريخ : <span id ="invoiceDate" class="date" data-date-format="yyyy-mm-dd" ></span>
@@ -47,6 +47,7 @@
             <th>QTY</th>
             <th>WTY</th>
             <th>Unit Price</th>
+            <th>Discount</th>
             <th>Total</th>
           </thead>
           <tbody id ="preview">
@@ -60,6 +61,10 @@
               <tr>
                 <th>SubTotal</th>
                 <td id="subtPr">0</td>
+              </tr>
+              <tr>
+                <th>Discount</th>
+                <td id="discountPr">0</td>
               </tr>
               <tr>
                 <th>TAX</th>
@@ -86,7 +91,7 @@
             </table>
           </div>
           <div id="balanceinfo" class="hide span3 pull-right" >
-            <table class="table table-condensed table-bordered" dir="rtl">
+            <table id="balancetable" class="table table-condensed table-bordered" dir="rtl">
               <tbody>
                 <tr>
                   <th>رصيد الزبون</th>

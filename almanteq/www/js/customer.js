@@ -85,6 +85,14 @@ $(document).ready(function(){
       title: 'دائن بملغ وقدره',
       disabled: true,
     });
+    $('#roof').editable({
+      url: '/editCustomer',
+      type: 'text',
+      pk: 1,
+      name: 'roof',
+      title: 'سقف المبيعات',
+      disabled: true,
+    });
     $('#debtor').editable({
       url: '/editCustomer',
       type: 'text',

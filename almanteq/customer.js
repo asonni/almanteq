@@ -54,7 +54,8 @@ exports.customerMgr = {
     mysqlMgr.connect(function (conn){
       conn.query('SELECT * FROM `customer` WHERE `idcustomer`= ? ;'+
         ' SELECT SUM(`offer`.`left`) AS `left` FROM `offer` WHERE `offer`.`customer_idcustomer` = ?;'+
-        ' SELECT  SUM(`invoice`.`totalprice`) as totalprice, SUM(`invoice`.`paid`) as paid from `invoice` WHERE `invoice`.`customer_idcustomer` = ?;'+
+        ' SELECT  SUM(`invoice`.`totalprice`) as totalprice, SUM(`invoice`.`paid`) as paid from `invoice` WHERE `invoice`.`customer_idcustomer` = ? AND '+
+        '`invoice`.`status` = "ACTIVE";'+
         ' SELECT  SUM(`receipt`.`amount`) as pay from `receipt` WHERE `receipt`.`type`="PAY" AND `receipt`.`customer_idcustomer`=?;'+
         ' SELECT  SUM(`receipt`.`amount`) as recieve from `receipt` WHERE `receipt`.`type`="RECIEVE" AND `receipt`.`customer_idcustomer`=?',[id,id,id,id,id],function(err,result) {
         if(err) {

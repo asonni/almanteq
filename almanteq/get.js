@@ -107,6 +107,9 @@ exports.getMgr = {
       case "queryInvoices" :
         this.handleQueryInvoices(req.params,res,cb);
         break;
+      case "queryOffers" :
+        this.handleQueryOffers(req.params,res,cb);
+        break;
       case "cancelInvoice" :
         this.handleCancelInvoice(req.params,res,cb);
         break;
@@ -307,6 +310,11 @@ exports.getMgr = {
   },
   handleQueryInvoices : function (req,res,cb){
     invoiceMgr.queryInvoices(req.id,function (result){
+      cb(result);
+    });
+  },
+  handleQueryOffers : function (req,res,cb){
+    offerMgr.queryOffers(req.id,function (result){
       cb(result);
     });
   },

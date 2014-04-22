@@ -56,11 +56,11 @@ $(document).ready(function(){
     function getUserRep(){
         $.get('/action/getUserRep').success(function(reps){
             for(var key in reps[0]){
-                if($.days[reps[0][key].day]){
-                    $.days[reps[0][key].day][reps[0][key].id]=reps[0][key].count;
+                if($.days[reps[0][key].month]){
+                    $.days[reps[0][key].month][reps[0][key].id]=reps[0][key].count;
                 } else {
-                    $.days[reps[0][key].day] ={day : reps[0][key].day};
-                    $.days[reps[0][key].day][reps[0][key].id]=reps[0][key].count;
+                    $.days[reps[0][key].month] ={month : reps[0][key].month};
+                    $.days[reps[0][key].month][reps[0][key].id]=reps[0][key].count;
                 }
             }
             for (key in $.days){
@@ -73,7 +73,7 @@ $(document).ready(function(){
             $("#chartContainer").dxChart({
                 dataSource: $.dataSource,
                 commonSeriesSettings: {
-                    argumentField: "day"
+                    argumentField: "month"
                 },
                 series: reps[1],
                 argumentAxis:{
@@ -84,7 +84,7 @@ $(document).ready(function(){
                 tooltip:{
                     enabled: true
                 },
-                title: "Historic, Current and Future Population",
+                title: "تقارير المستخدمين",
                 legend: {
                     verticalAlignment: "bottom",
                     horizontalAlignment: "center"

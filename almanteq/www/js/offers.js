@@ -2,6 +2,17 @@ $(document).ready(function(){
 	$.limit=0;
 	$.size=0;
 	
+	$('#sea').on('input', function() {
+   		query= $('#sea').val();
+   		if(query !=""){
+	   		$.get('/action/queryOffers/'+query).success(function(offers) {
+	   			$.draw({"offers":offers}, "offers-template", "#offers-target");
+
+	   		});
+	   	} else {
+	   		getOffers();
+	   	}
+   	});
 	
 	function redraw(offers){
 		var html = $.draw({"offers":offers}, "newOffers-template");
@@ -100,7 +111,7 @@ $(document).ready(function(){
 		});
 }*/
 
-
+/*<td><a class="btn btn-mini btn-danger whenActive" href="#delOfferModal" onClick='deleteMe("{{this.offern}}","{{this.idoffer}}");return false;'  data-toggle="modal"><i class="icon-remove"></i></a></td>*/
 
 getOffers();
 getUser();

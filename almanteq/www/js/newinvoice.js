@@ -4,7 +4,9 @@ $(document).ready(function(){
   $.objThemes={};
   $.subObjThemes={};
   $.total=0;
+  $.subtotal=0;
   $.customer={};
+  $.discount=0;
   $.customers = new Array();
   var all = {},
   count = 1;
@@ -42,6 +44,10 @@ $(document).ready(function(){
         width : "170px"
       });
       $(custs).select2('val','0');
+      $.get('/action/getCustomer/'+ $.customers[0].value, function(customer) {
+        var balance = customer[1][0].left - (customer[2][0].totalprice-customer[2][0].paid) - customer[3][0].pay + customer[4][0].recieve;
+        $('#balance').val(balance);
+      });
     });
   }
   
@@ -80,22 +86,29 @@ $(document).ready(function(){
       $('#ifFinal').show();
       $('#regs').hide();
       $('#paymentinfo').show();
+      $('#balanceinfo').show();
     } else {
       $('#ifFinal').hide();
       $('#regs').show();
       $('#paymentinfo').hide();
+      $('#balanceinfo').hide();
     }
   });
 
   $('#customers').on('change', function() {
+    console.log($("#customers").select2('data').id);
     $('#debtor').val($("#customers").select2('data').debtor);
     $('#creditor').val($("#customers").select2('data').creditor);
   });
 
   function calcTotal(){
-    $.total=0;
+    $.total=0,
+    $.discount=0;
+    $.subtotal=0;
     for (key in $.objects){
-      $.total+=0.5 * Math.ceil(2.0*($.objects[key].price * $.objects[key].quantity));
+      $.discount+= 0.5 * Math.ceil(2.0*$.objects[key].discount);
+      $.subtotal+=0.5 * Math.ceil(2.0*($.objects[key].price * $.objects[key].quantity));
+      $.total+=0.5 * Math.ceil(2.0*($.objects[key].price * $.objects[key].quantity - $.objects[key].discount));
     }
   }
 
@@ -105,7 +118,8 @@ $(document).ready(function(){
     tax = 0.5 * Math.ceil(2.0*tax);
     tax = tax + 0.005 * tax;
     tax = 0.5 * Math.ceil(2.0*tax);
-    $('#total1').val(0.5 * Math.ceil(2.0* $.total));
+    $('#total1').val(0.5 * Math.ceil(2.0* $.subtotal));
+    $('#totaldisc').val($.discount);
     if (flag || $("#ifTax").is(":checked") ) {
       $('#tax').val(tax);
       $('#overall').val(0.5 * Math.ceil(2.0* (tax+$.total)));
@@ -147,9 +161,6 @@ $(document).ready(function(){
       calcTax(false);
     }
   });
-  /*$('#subtPr').text($('#total1').val());
-    $('#taxPr').text($('#tax').val());
-    $('#totalPr').text($('#overall').val());*/
 
   function makeInvoice(){
     var invoiceObj = {
@@ -162,6 +173,7 @@ $(document).ready(function(){
       delivery:$('#delivery').val(),
       customer_idcustomer:$("#customers").select2('data').value,
       subtotal:$('#total1').val(),
+      totaldiscount : $('#totaldisc').val(),
       tax:$('#tax').val(),
       totalprice:$('#overall').val(),
       paid:$('#paid').val(),
@@ -192,7 +204,7 @@ $(document).ready(function(){
     {
       if($.objThemes[themeKey].text !=""){
         templ +='<tr class="warning">'+
-        '<td colspan="6"> <b> '+$.objThemes[themeKey].text+' </b></td>'+
+        '<td colspan="7"> <b> '+$.objThemes[themeKey].text+' </b></td>'+
         '</tr>';
       }
       for (var objKey in $.objects) {
@@ -205,6 +217,7 @@ $(document).ready(function(){
           '<td><p class="text-error">'+$.objects[objKey].quantity+'</p></td>'+
           '<td rowspan='+rowspan+'>'+$.objects[objKey].warranty+'</td>'+
           '<td rowspan='+rowspan+'>'+$.objects[objKey].price+'</td>'+
+          '<td rowspan='+rowspan+'>'+$.objects[objKey].discount+'</td>'+
           '<td rowspan='+rowspan+'>'+$.objects[objKey].totalprice+'</td>'+ 
           '</tr>'+
           '<tr>'+
@@ -234,12 +247,13 @@ $(document).ready(function(){
       '<th>QTY</th>'+
       '<th>WTY</th>'+
       '<th>Unit Price</th>'+
+      '<th>Discount</th>'+
       '<th>Total</th>'+
       '</thead>'+
       '<tbody>';
       for(var themeKey in $.subObjThemes){       
         alt +='<tr class="warning">'+
-        '<td colspan="6"> <b> '+$.subObjThemes[themeKey].text+' </b></td>'+
+        '<td colspan="7"> <b> '+$.subObjThemes[themeKey].text+' </b></td>'+
         '</tr>';
         for (var objKey in $.subObjects) {
           var rowspan = $.subObjects[objKey].specs.length+2;
@@ -252,6 +266,7 @@ $(document).ready(function(){
             '<td><p class="text-error">'+$.subObjects[objKey].quantity+'</p></td>'+
             '<td rowspan='+rowspan+'>'+$.subObjects[objKey].warranty+'</td>'+
             '<td rowspan='+rowspan+'>'+$.subObjects[objKey].price+'</td>'+
+            '<td rowspan='+rowspan+'>'+$.subObjects[objKey].discount+'</td>'+
             '<td rowspan='+rowspan+'>'+$.subObjects[objKey].totalprice+'</td>'+ 
             '</tr>'+
             '<tr>'+
@@ -293,6 +308,7 @@ $(document).ready(function(){
     '</div>';
 
     $('#subtPr').text($('#total1').val());
+    $('#discountPr').text($('#totaldisc').val());
     $('#taxPr').text($('#tax').val());
     $('#totalPr').text($('#overall').val());
     $('#preview').html(templ);
@@ -303,7 +319,6 @@ $(document).ready(function(){
   }
 
   $('body').on("click", ".newTheme", function(){
-    console.log(count);
     count+=1;
     $.themes[count] = { text : "موضوع"+count,
     val : count};
@@ -395,7 +410,6 @@ $('body').on("click", ".invoice", function(){
 
   var sysId = $("#sysId").val();
   $.get('/action/getItemPrice/'+sysId, function (data) {
-    console.log(data.selltype);
     if(data.selltype=="MANUAL"){
       $("#price").val(data.sellprice);
       $("#total").val(data.sellprice);
@@ -425,15 +439,16 @@ $('body').on("click", ".invoice", function(){
   });
 });
 $('input:radio').change(function(){
+  var disc = validateInput('#discount');
   if  ($("#retail").is(':checked')) {
     $("#price").val($("#retailPrice").val());
-    $("#total").val(Math.round($("#retailPrice").val()*$("#quantity").val(),3));
+    $("#total").val(Math.round($("#retailPrice").val()*$("#quantity").val()-disc,3));
   } else if ($("#wholesale").is(':checked')) {
     $("#price").val($("#wholeSalePrice").val());
-    $("#total").val(Math.round($("#wholeSalePrice").val()*$("#quantity").val(),3));
+    $("#total").val(Math.round($("#wholeSalePrice").val()*$("#quantity").val()-disc,3));
   } else {
     $("#price").val($("#afterCostPrice").val());
-    $("#total").val(Math.round($("#afterCostPrice").val()*$("#quantity").val(),3));
+    $("#total").val(Math.round($("#afterCostPrice").val()*$("#quantity").val()-disc,3));
   }
 });
 
@@ -446,6 +461,7 @@ $('body').on("click", ".confirmAddInvoice", function(){
   var html = "",
   obj = {},
   price = parseFloat($("#price").val()),
+  discount = parseFloat($("#discount").val()),
   system = $("#system").val(),
   quantity = parseInt($("#quantity").val()),
   warranty = $("#warranty").val(),
@@ -453,23 +469,25 @@ $('body').on("click", ".confirmAddInvoice", function(){
   theme = $("#theme").val(),
   sysId = $("#sysId").val();
 
-  if($.objects[theme+sysId] != undefined) {
+  if($.objects[theme+sysId] != undefined || $.subObjects[theme+sysId] != undefined) {
     $("#invoiceModal").modal('hide');
     $("#p"+theme+sysId).text(price);
     var newQuantity = quantity+parseInt($("#q"+theme+sysId).text()),
-      newTotal = 0.5 * Math.ceil(2.0* price*newQuantity);
+      newTotal = 0.5 * Math.ceil(2.0* (price*newQuantity-discount));
     $("#q"+theme+sysId).text(newQuantity);
-    $("#t"+theme+sysId).text(newTotal,3);
+    $("#d"+theme+sysId).text(discount);
+    $("#t"+theme+sysId).text(newTotal);
+    console.log($('#c'+theme).is(":checked")+"ok");
     if($('#c'+theme).is(":checked")||theme ==1){
       $.objects[theme+sysId].price = price;
+      $.objects[theme+sysId].discount = discount;
       $.objects[theme+sysId].quantity = newQuantity;
       $.objects[theme+sysId].totalprice =  newTotal;
-      /*$.total+=parseFloat(totalPrice);
-      $.total = Math.round($.total,3);*/
 
     } else {
 
       $.subObjects[theme+sysId].price = price;
+      $.subObjects[theme+sysId].discount = discount;
       $.subObjects[theme+sysId].quantity = newQuantity;
       $.subObjects[theme+sysId].totalprice =  newTotal;
     }
@@ -482,6 +500,7 @@ $('body').on("click", ".confirmAddInvoice", function(){
     '<td>'+system+'</td>'+
     '<td id="q'+theme+sysId+'">'+quantity+'</td>'+
     '<td id="p'+theme+sysId+'">'+price+'</td>'+
+    '<td id="d'+theme+sysId+'">'+discount+'</td>'+
     '<td id="t'+theme+sysId+'">'+totalPrice+'</td>'+
     '<td><a class="icon-remove remove" href="#removeModal" onClick=\'removeMe("'+system+'","'+theme+sysId+'");return false;\' data-toggle="modal" ></a></td>'+
     '</tr>';
@@ -491,6 +510,7 @@ $('body').on("click", ".confirmAddInvoice", function(){
       system : system,
       system_iditem : sysId,
       price : price,
+      discount : discount,
       quantity : quantity,
       warranty : warranty,
       totalprice : Math.round(totalPrice,3),
@@ -506,7 +526,6 @@ $('body').on("click", ".confirmAddInvoice", function(){
     }
 
     $('#invoicetype').attr("disabled", true);
-    //$('#total1').val($.total);
     $.draw({"systems":null}, "systems-template", "#systems-target");
     $.get('/action/getSystem/'+sysId, function (sysObj) {
       $.get('/action/getSpecs/'+sysId, function (specs) {
@@ -514,7 +533,6 @@ $('body').on("click", ".confirmAddInvoice", function(){
         setObj("desc",sysObj[0].note);
         setObj("productnum",sysObj[0].productnum);
         setObj("brand", sysObj[0].brand);
-
       });
     });
   }
@@ -554,15 +572,28 @@ $('body').on("click", ".confirmRemoveTheme", function(){
   delete $.subObjThemes[themeId];
   delete $.objThemes[themeId];
   calcTax();
-
 });
 
+function validateInput(name){
+  var val = parseFloat($(name).val());
+  if(!val){
+    val = 0;
+  }
+  return val
+} 
+
+$('#discount').on('input',function(){
+  var disc = validateInput('#discount');
+  $("#total").val(Math.round(($("#price").val()*$("#quantity").val()- disc),3));
+});
 
 $('#price').on('input',function(){
-  $("#total").val(Math.round($("#price").val()*$("#quantity").val(),3));
+  var disc = validateInput('#discount');
+  $("#total").val(Math.round(($("#price").val()*$("#quantity").val()-disc),3));
 });
 $('#quantity').on('input',function(){
-  $("#total").val(Math.round($("#price").val()*$("#quantity").val(),3));
+  var disc = validateInput('#discount');
+  $("#total").val(Math.round(($("#price").val()*$("#quantity").val()-disc),3));
 });
 
 $('#cust').on('input', function() {
@@ -577,7 +608,6 @@ $('#cust').on('input', function() {
 
 $('#sys').on('input', function() {
   var query = $("#sys").val();
-  console.log(query);
   if(query.length >0) {
     $.get('/action/querySystems/'+query, function (data) {
       $.draw({"systems":data}, "systems-template", "#systems-target");

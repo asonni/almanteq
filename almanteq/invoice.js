@@ -73,7 +73,7 @@ exports.invoiceMgr = {
     mysqlMgr.connect(function (conn){
       var isystem ="`isystem`.`idisystem`, `isystem`.`invoice_idinvoice`,"+
                    "`isystem`.`quantity` as iquantity, `isystem`.`price` as iprice, "+
-                   "`isystem`.`totalprice` as itotalprice, `isystem`.`system_iditem`,`isystem`.`theme_idtheme`, `isystem`.`warranty`",
+                   "`isystem`.`totalprice` as itotalprice, `isystem`.`discount` as discount, `isystem`.`system_iditem`,`isystem`.`theme_idtheme`, `isystem`.`warranty`",
           system ="`system`.`iditem`, `system`.`system`,"+
                   "`system`.`productnum`, `system`.`brand`,"+
                   "`system`.`class`, `system`.`barcode`, `system`.`itemprice` as sprice,"+
@@ -101,7 +101,6 @@ exports.invoiceMgr = {
                   util.log("mysql lib err "+err);
                 } else {
                   for (var i=0;i<isystem.length;i++){
-                    //console.log(isystem[i]);
                     var iditem = isystem[i].system_iditem,
                         quantity = isystem[i].quantity;
                     conn.query('UPDATE `system` SET `left` = `left` + ? WHERE `iditem` = ?', [quantity,iditem],  function(err, result) {
@@ -140,13 +139,12 @@ exports.invoiceMgr = {
   },
   getUserRep : function(cb) {
     mysqlMgr.connect(function (conn){
-      conn.query('SELECT  `user_iduser` as `id`, DAY(`timestamp`) as `day`, COUNT(`user_iduser`) as `count`'+
+      conn.query('SELECT  `user_iduser` as `id`, MONTH(`timestamp`) as `month`, COUNT(`user_iduser`) as `count`'+
                  'FROM  `invoice`'+
-                 'WHERE MONTH(CURRENT_DATE()) = MONTH(`timestamp`) '+ 
+                /* 'WHERE MONTH(CURRENT_DATE()) = MONTH(`timestamp`) '+*/ 
                  'GROUP BY DAY(`timestamp`) ,`user_iduser`; SELECT DISTINCT '+
                  '(`user_iduser`) AS valueField ,`user`.`name` FROM  `invoice` ,  `user` '+
-                  'WHERE MONTH(CURRENT_DATE())= MONTH(`timestamp`) AND  '+
-                  '`user`.`iduser` =  `invoice`.`user_iduser` ',function(err,result) {
+                  'WHERE `user`.`iduser` =  `invoice`.`user_iduser` ',function(err,result) {
         if(err) {
         util.log("mysql lib err "+err);
         } else {

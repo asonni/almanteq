@@ -4,10 +4,9 @@ $(document).ready(function(){
   $.subObjects={};
   $.objThemes={};
   $.subObjThemes={};
+  $.flag=true;
   function preview(themes,objects){
-    /*$('#invType').text($('#invoicetype option:selected').html());
-    $('#toCustomer').text($('#customers').text());
-    $('#invoiceDate').text($('#oDate').val());*/
+   
     var templ = '',
       alt='<legend>Alternative Solutions :</legend>'+
       '<table class="table table-condensed table-bordered">'+
@@ -17,6 +16,7 @@ $(document).ready(function(){
       '<th>QTY</th>'+
       '<th>WTY</th>'+
       '<th>Unit Price</th>'+
+      '<th>Discount</th>'+
       '<th>Total</th>'+
       '</thead>'+
       '<tbody>',
@@ -27,7 +27,7 @@ $(document).ready(function(){
       if(themes[themeKey].selected){
         if(themes[themeKey].name!=""){
           templ +='<tr class="warning">'+
-          '<td colspan="6"> <b> '+themes[themeKey].name+' </b></td>'+
+          '<td colspan="7"> <b> '+themes[themeKey].name+' </b></td>'+
           '</tr>';
         }
         for (var objKey in objects){
@@ -41,6 +41,7 @@ $(document).ready(function(){
               '<td><p class="text-error">'+objects[objKey].iquantity+'</p></td>'+
               '<td rowspan='+rowspan+'>'+objects[objKey].warranty+'</td>'+
               '<td rowspan='+rowspan+'>'+objects[objKey].iprice+'</td>'+
+              '<td rowspan='+rowspan+'>'+objects[objKey].discount+'</td>'+
               '<td rowspan='+rowspan+'>'+objects[objKey].itotalprice+'</td>'+ 
               '</tr>'+
               '<tr>'+
@@ -61,8 +62,9 @@ $(document).ready(function(){
       } else {
         flag=true;
         alt +='<tr class="warning">'+
-          '<td colspan="6"> <b> '+themes[themeKey].name+' </b></td>'+
+          '<td colspan="7"> <b> '+themes[themeKey].name+' </b></td>'+
           '</tr>';
+          console.log(objects);
         for (var objkey in objects){
           var specs2 = getSpecs(objects[objKey].system_iditem);
           var rowspan = specs2.length+2;
@@ -74,6 +76,7 @@ $(document).ready(function(){
               '<td><p class="text-error">'+objects[objKey].iquantity+'</p></td>'+
               '<td rowspan='+rowspan+'>'+objects[objKey].warranty+'</td>'+
               '<td rowspan='+rowspan+'>'+objects[objKey].iprice+'</td>'+
+              '<td rowspan='+rowspan+'>'+objects[objKey].discount+'</td>'+
               '<td rowspan='+rowspan+'>'+objects[objKey].itotalprice+'</td>'+ 
               '</tr>'+
               '<tr>'+
@@ -81,13 +84,13 @@ $(document).ready(function(){
               '<td>'+objects[objKey].note+'</td>'+
               '<td></td>'+
               '</tr>';
-              for(var j = 0 ; j < specs2.length; j++ ) {
-                alt +='<tr>'+
-                '<td>'+specs2[j].productn+'</td>'+
-                '<td>'+specs2[j].name+'</td>'+
-                '<td>'+specs2[j].squantity+'</td>'+
-                '</tr>';
-              }
+            for(var j = 0 ; j < specs2.length; j++ ) {
+              alt +='<tr>'+
+              '<td>'+specs2[j].productn+'</td>'+
+              '<td>'+specs2[j].name+'</td>'+
+              '<td>'+specs2[j].squantity+'</td>'+
+              '</tr>';
+            }
           }
         }
       }
@@ -138,12 +141,6 @@ $(document).ready(function(){
           console.log(invoice[1]);
           console.log(invoice[2]);
           preview(invoice[1],invoice[2]);
-
-          //setThemes(invoice[1],invoice[2]);
-          /*for(var i=0;i<systems.length;i++){
-            getSystem(systems[i].system_iditem);
-            getSpecs(systems[i].system_iditem);
-          }*/
         });
       }
     }
@@ -234,11 +231,14 @@ $(document).ready(function(){
       return "";
     }
   }
-
-  $(document).on('mouseenter', '.divbutton', function () {
-        $(this).find(":button").show();
-    }).on('mouseleave', '.divbutton', function () {
-        $(this).find(":button").hide();
-    });
+  $('body').on('click', '#ownerLogo', function () {
+    if($.flag){
+      $('#balancetable').hide();
+      $.flag=false;
+    } else {
+      $('#balancetable').show();
+      $.flag=true;
+    }
+  });
 
 });

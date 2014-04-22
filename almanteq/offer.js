@@ -154,6 +154,17 @@ exports.offerMgr = {
       });
     });
   },
+  queryOffers : function(query,cb) {
+    mysqlMgr.connect(function (conn){
+      conn.query('SELECT * FROM `offer` WHERE idoffer = ?',query,function(err,result) {
+        if(err) {
+        util.log("mysql lib err "+err);
+        } else {
+          cb(result);
+        }
+      });
+    });
+  },
 
   
 }

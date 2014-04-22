@@ -46,6 +46,7 @@
         </div>
         <div class='notifications top-right'>
         </div>
+        <input type="text" name="sea" id="sea" class="span2 search-query pull-right" placeholder="بحث بالرقم الإشاري" value="">
         
         <div  id="offers-target">
         </div>
@@ -133,6 +134,7 @@
         <thead>
           <tr>
             <th>Status</th>
+            <th>الإشاري</th>
             <th>Offer #</th>
             <th>SAP order #</th>
             <th>Order #</th>
@@ -140,13 +142,13 @@
             <th>Date / التاريخ</th>
             <th>Product Version</th>
             <th>اظهار</th>
-            <th>إزالة</th>
           </tr>
         </thead>
         <tbody>
         {{#each offers}}
           <tr id="o{{this.idoffer}}">
             <td><span class="label label-{{checkStatus this.validity this.date this.status}}"><i class="icon-flag"></i></span></td>
+            <td>{{this.idoffer}}</td>
             <td>{{this.offern}}</td>
             <td>{{this.sapordern}}</td>
             <td>{{this.ordern}}</td>
@@ -154,7 +156,6 @@
             <td>{{formatTime this.date}}</td>
             <td>{{this.producv}}</td>
             <td><a class="btn btn-mini" href="offer.html?id={{this.idoffer}}"><i class="icon-search"></i></a></td>
-            <td><a class="btn btn-mini btn-danger whenActive" href="#delOfferModal" onClick='deleteMe("{{this.offern}}","{{this.idoffer}}");return false;'  data-toggle="modal"><i class="icon-remove"></i></a></td>
           </tr>
         {{/each}}
         </tbody>
@@ -164,6 +165,7 @@
       {{#each offers}}
       <tr id="o{{this.idoffer}}">
           <td><span class="label label-{{checkStatus this.validity this.date this.status}}"><i class="icon-flag"></i></span></td>
+          <td>{{this.idoffer}}</td>
           <td>{{this.offern}}</td>
           <td>{{this.sapordern}}</td>
           <td>{{this.ordern}}</td>
@@ -171,7 +173,6 @@
           <td>{{formatTime this.date}}</td>
           <td>{{this.producv}}</td>
           <td><a class="btn btn-mini" href="offer.html?id={{this.idoffer}}"><i class="icon-search"></i></a></td>
-          <td><a class="btn btn-mini btn-danger whenActive" href="#delOfferModal" onClick='deleteMe("{{this.offern}}","{{this.idoffer}}");return false;'  data-toggle="modal"><i class="icon-remove"></i></a></td>
         </tr>
       {{/each}}
     </script>

@@ -114,6 +114,7 @@
           <tr><td>المندوب</td><td><a href="#" id="rep" data-type="text" data-pk="{{customer.idcustomer}}" data-original-title="اسم المندوب">{{customer.rep}}</a></td></tr>
           <tr><td>البريد الإلكتروني</td><td><a href="#" id="email" data-type="text" data-pk="{{customer.idcutsomer}}" data-original-title="البريد الالكتروني">{{customer.email}}</a></td></tr>
           <tr><td>رقم الهاتف</td><td><a href="#" id="phone" data-type="text" data-pk="{{customer.idcustomer}}" data-original-title="رقم الهاتف">{{customer.phone}}</a></td></tr>
+          <tr><td>سقف المبيعات</td><td><a href="#" id="roof" data-type="text" data-pk="{{customer.idcustomer}}" data-original-title="سقف المبيعات">{{customer.roof}}</a></td></tr>
           <tr><td><b>الرصيد</b></td><td><b>{{balance}}</b></td></tr>
           <tr><td>ملاحظات</td><td><a href="#" data-type="textarea" class="editable editable-click " id="note"  data-pk="{{customer.idcustomer}}">{{customer.note}}</a></td></tr>
         </tbody>
@@ -177,7 +178,6 @@
             <th>Date / التاريخ</th>
             <th>Product Version</th>
             <th>اظهار</th>
-            <th>إزالة</th>
           </tr>
         </thead>
         <tbody>
@@ -191,7 +191,6 @@
             <td>{{formatTime this.date}}</td>
             <td>{{this.producv}}</td>
             <td><a class="btn btn-mini" href="offer.html?id={{this.idoffer}}"><i class="icon-search"></i></a></td>
-            <td><a class="btn btn-mini btn-danger whenActive" href="#delOfferModal" onClick='deleteMe("{{this.offern}}","{{this.idoffer}}");return false;'  data-toggle="modal"><i class="icon-remove"></i></a></td>
           </tr>
         {{/each}}
         </tbody>
